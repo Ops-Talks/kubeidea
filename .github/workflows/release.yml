@@ -43,7 +43,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build libgtk-3-dev pkg-config
 
-      - name: Build desktop binary
+      - name: Build desktop binary (non-Windows)
+        if: matrix.target != 'windows'
+        run: poetry run flet build ${{ matrix.target }} --yes src/
+
+      - name: Build desktop binary (Windows)
+        if: matrix.target == 'windows'
         run: poetry run flet build ${{ matrix.target }} --yes src/
         env:
           PYTHONIOENCODING: utf-8

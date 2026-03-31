@@ -3,6 +3,7 @@ site_description: Kubernetes desktop IDE built with Python (Flet + Poetry).
 site_url: https://ops-talks.github.io/kubeidea/
 repo_name: Ops-Talks/kubeidea
 repo_url: https://github.com/Ops-Talks/kubeidea
+use_directory_urls: true
 
 theme:
   name: material
@@ -55,3 +56,6 @@ nav:
   - Security: security.md
   - Contributing: contributing.md
   - Roadmap: roadmap.md
+
+extra_css:
+  - stylesheets/extra.css

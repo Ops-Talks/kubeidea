@@ -1,0 +1,64 @@
+/* ── Kube-IDEA – custom gradient theme ─────────────────────────────── */
+
+/* ---------- CSS custom properties (light mode) -------------------- */
+:root {
+  --ki-blue-start: #1565c0;      /* Material Blue 800  */
+  --ki-blue-mid:   #1e88e5;      /* Material Blue 600  */
+  --ki-blue-end:   #42a5f5;      /* Material Blue 400  */
+  --ki-gradient:   linear-gradient(135deg, var(--ki-blue-start), var(--ki-blue-mid), var(--ki-blue-end));
+}
+
+/* ---------- CSS custom properties (dark / slate mode) ------------- */
+[data-md-color-scheme="slate"] {
+  --ki-blue-start: #0d47a1;      /* Material Blue 900  */
+  --ki-blue-mid:   #1565c0;      /* Material Blue 800  */
+  --ki-blue-end:   #1e88e5;      /* Material Blue 600  */
+}
+
+/* ---------- Header gradient -------------------------------------- */
+.md-header {
+  background: var(--ki-gradient);
+}
+
+/* ---------- Top-level navigation tabs gradient -------------------- */
+.md-tabs {
+  background: var(--ki-gradient);
+}
+
+/* ---------- Hero / page title area ------------------------------- */
+.md-main .md-content h1 {
+  background: var(--ki-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- Sidebar active link ---------------------------------- */
+.md-nav__link--active,
+.md-nav__link:is(:focus, :hover) {
+  color: var(--ki-blue-mid);
+}
+
+/* ---------- Accent buttons / links ------------------------------- */
+.md-typeset a {
+  color: var(--ki-blue-mid);
+}
+.md-typeset a:is(:focus, :hover) {
+  color: var(--ki-blue-start);
+}
+
+/* ---------- Admonition accent (info / note) ---------------------- */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: var(--ki-blue-mid);
+}
+
+/* ---------- Footer gradient -------------------------------------- */
+.md-footer {
+  background: var(--ki-gradient);
+}
+
+/* ---------- Search bar focus ring -------------------------------- */
+.md-search__form:is(:focus-within) {
+  box-shadow: 0 0 0 2px var(--ki-blue-end);
+}

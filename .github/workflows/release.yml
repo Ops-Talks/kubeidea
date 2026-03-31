@@ -38,7 +38,7 @@ jobs:
         run: poetry install
 
       - name: Build desktop binary
-        run: poetry run flet build ${{ matrix.target }} src/
+        run: poetry run flet build ${{ matrix.target }} --yes src/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -46,8 +46,35 @@ jobs:
           name: ${{ matrix.artifact }}
           path: build/
 
+  build-fedora:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install system dependencies
+        run: |
+          dnf install -y python3 python3-pip git clang cmake ninja-build \
+            gtk3-devel pkg-config tar gzip
+
+      - uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: pip3 install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build desktop binary
+        run: poetry run flet build linux --yes src/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kube-idea-fedora
+          path: build/
+
   release:
-    needs: build
+    needs: [build, build-fedora]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,3 +100,4 @@ jobs:
             kube-idea-linux.tar.gz
             kube-idea-macos.tar.gz
             kube-idea-windows.tar.gz
+            kube-idea-fedora.tar.gz

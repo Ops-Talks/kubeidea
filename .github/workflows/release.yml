@@ -37,8 +37,21 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Build desktop binary
+      - name: Install Linux build dependencies
+        if: matrix.target == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build libgtk-3-dev pkg-config
+
+      - name: Build desktop binary (non-Windows)
+        if: matrix.target != 'windows'
         run: poetry run flet build ${{ matrix.target }} --yes src/
+
+      - name: Build desktop binary (Windows)
+        if: matrix.target == 'windows'
+        run: poetry run flet build ${{ matrix.target }} --yes src/
+        env:
+          PYTHONIOENCODING: utf-8
 
       - name: Package .deb (Linux)
         if: matrix.target == 'linux'
@@ -88,7 +101,7 @@ jobs:
       - name: Install system dependencies
         run: |
           dnf install -y python3 python3-pip git clang cmake ninja-build \
-            gtk3-devel pkg-config tar gzip
+            gtk3-devel pkg-config tar gzip which
 
       - uses: actions/checkout@v4
 
@@ -128,13 +141,14 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Build desktop binary
-        run: poetry run flet build linux --yes src/
-
-      - name: Install Flatpak tools
+      - name: Install Linux build and Flatpak dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y flatpak flatpak-builder
+          sudo apt-get install -y clang cmake ninja-build libgtk-3-dev pkg-config \
+            flatpak flatpak-builder
+
+      - name: Build desktop binary
+        run: poetry run flet build linux --yes src/
 
       - name: Install Flatpak runtime
         run: |

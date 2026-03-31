@@ -16,7 +16,7 @@ modules:
     build-commands:
       - mkdir -p /app/kube-idea /app/bin
       - cp -a * /app/kube-idea/
-      - chmod +x /app/kube-idea/kube-idea 2>/dev/null || true
+      - if [ ! -f /app/kube-idea/kube-idea ]; then echo "Error: /app/kube-idea/kube-idea not found in Flatpak build." >&2; exit 1; fi; chmod +x /app/kube-idea/kube-idea
       - ln -sf /app/kube-idea/kube-idea /app/bin/kube-idea
     sources:
       - type: dir

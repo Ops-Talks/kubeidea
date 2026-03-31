@@ -1,5 +1,8 @@
 # Kube-IDEA
 
+[![CI](https://github.com/Ops-Talks/kubeidea/actions/workflows/ci.yml/badge.svg)](https://github.com/Ops-Talks/kubeidea/actions/workflows/ci.yml)
+[![Docs](https://github.com/Ops-Talks/kubeidea/actions/workflows/docs.yml/badge.svg)](https://ops-talks.github.io/kubeidea/)
+
 > **Kubernetes desktop IDE built with Python (Flet + Poetry).**
 
 Kube-IDEA is a cross-platform desktop application for operating Kubernetes
@@ -166,3 +169,27 @@ poetry run mypy src/kubeidea/
 ## License
 
 See [LICENSE](LICENSE) for details.
+
+---
+
+## Documentation
+
+Full documentation is available at
+**<https://ops-talks.github.io/kubeidea/>**.
+
+To serve the docs locally:
+
+```bash
+poetry install --with docs
+poetry run mkdocs serve
+```
+
+---
+
+## Releases & binaries
+
+When a version tag (`v*`) is pushed, the
+[release workflow](.github/workflows/release.yml) builds desktop binaries
+for **Linux**, **macOS**, and **Windows** using `flet build` and attaches
+them to the GitHub Release. Download installers from the
+[Releases page](https://github.com/Ops-Talks/kubeidea/releases).

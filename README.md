@@ -1,2 +1,168 @@
-# kubeidea
-The Kubernetes IDE Platform
+# Kube-IDEA
+
+> **Kubernetes desktop IDE built with Python (Flet + Poetry).**
+
+Kube-IDEA is a cross-platform desktop application for operating Kubernetes
+clusters with a focus on lightweight UX, security (DevSecOps), and
+extensibility. It is written in **Python**, uses **Poetry** for dependency
+management, and renders a modern UI via **Flet** (Flutter).
+
+---
+
+## Features (MVP scope)
+
+| Feature | Description |
+|---|---|
+| **Cluster explorer** | List Namespaces, Pods, Deployments, Services, Nodes; view details, events, and YAML |
+| **Logs** | Streaming logs with label/container filters; search; JSON/TXT export |
+| **Exec** | Remote shell (TTY/resize) in containers |
+| **Port-forward** | Service/Pod port-forwarding; active tunnel manager |
+| **Metrics** | CPU/Memory from metrics-server; optional Prometheus connector |
+| **RBAC Inspector** | Who-can-what analysis; SelfSubjectAccessReview simulation |
+| **YAML Editor** | Schema validation (cluster OpenAPI); diffs vs. live |
+| **Plugins** | Python entry-point based plugin system with host API |
+
+---
+
+## Architecture
+
+```
++----------------------------- UI (Flet) ------------------------------+
+|  Navigation     Panels     Logs/Term      YAML Editor     Metrics   |
++------------------------------|---------------------------------------+
+                               v
+                       +--------------+       +----------------+
+                       |  Core App    |<----->|  Plugin Host   |
+                       | (Python)     |       | (entry points) |
+                       +------+-------+       +----------------+
+                              |
+    +-------------------------+-------------------------------+
+    |                         |                               |
+    v                         v                               v
+[Kube Adapter]         [Observability]                 [Config & Sec]
+- kubeconfig ctx       - metrics-server/Prom           - RBAC viewer
+- CRUD resources       - events                        - Telemetry (opt-in)
+- logs/exec/pf         - log aggregation               - Secrets handling
+
+[CLI/Daemon optional]  [Store/Cache (SQLite)]  [Packaging/Updater]
+```
+
+---
+
+## Project structure
+
+```text
+kube-idea/
+├── pyproject.toml          # Poetry project definition & tool config
+├── src/kubeidea/
+│   ├── app.py              # Flet application entry point
+│   ├── ui/                 # Flet views, routing, theming
+│   │   ├── theme.py
+│   │   ├── navigation.py
+│   │   └── views/
+│   │       └── home.py
+│   ├── core/               # Application services, use cases
+│   │   └── context.py
+│   ├── kube/               # API clients, watchers, port-forward, exec
+│   │   ├── client.py
+│   │   └── resources.py
+│   ├── metrics/            # metrics-server / Prometheus adapters
+│   │   ├── server.py
+│   │   └── prometheus.py
+│   ├── plugins/            # Plugin host, SDK, lifecycle
+│   │   └── host.py
+│   ├── security/           # RBAC inspector, secrets handling
+│   │   └── rbac.py
+│   ├── config/             # Settings, kubeconfig manager
+│   │   └── settings.py
+│   └── utils/              # Logging, telemetry (opt-in), cache
+│       └── logging.py
+├── plugins/                # First-party sample plugins
+├── tests/                  # pytest test suite
+└── README.md
+```
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- **Python ≥ 3.11**
+- **Poetry ≥ 1.9** (`pip install poetry`)
+
+### Install dependencies
+
+```bash
+poetry install
+```
+
+### Run in development mode
+
+```bash
+poetry run flet run src/kubeidea/app.py
+```
+
+### Build desktop executables
+
+```bash
+poetry run flet build
+```
+
+### Run tests
+
+```bash
+poetry run pytest
+```
+
+### Lint & type-check
+
+```bash
+poetry run ruff check src/ tests/
+poetry run mypy src/kubeidea/
+```
+
+---
+
+## Development flow
+
+```bash
+# Bootstrap
+poetry install
+
+# Run app (opens native window)
+poetry run flet run src/kubeidea/app.py
+
+# Quality checks
+poetry run pytest
+poetry run ruff check src/ tests/
+poetry run mypy src/kubeidea/
+```
+
+---
+
+## Security (DevSecOps)
+
+- **Locked dependencies** (`poetry.lock`) for reproducible builds and SCA.
+- **Linters & types**: `ruff`, `mypy` in CI.
+- **SBOM**: CycloneDX generation planned; license policy.
+- **Secrets**: Never stored; use OS keyring provider.
+- **RBAC**: All actions respect `SubjectAccessReview` of the cluster.
+- **Telemetry**: 100 % opt-in, disabled by default, no sensitive data.
+
+---
+
+## Roadmap
+
+| Phase | EPICs | Timeline |
+|---|---|---|
+| Foundation | App Desktop (Flet + Packaging) · Context Manager | Month 1–2 |
+| Troubleshooting | Logs, Exec, Port-forward · Metrics | Month 3–4 |
+| Governance | YAML Editor · RBAC Inspector | Month 5 |
+| Ecosystem | Plugins · Distribution · Security/Compliance | Month 6 |
+
+---
+
+## License
+
+See [LICENSE](LICENSE) for details.

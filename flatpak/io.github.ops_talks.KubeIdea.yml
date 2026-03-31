@@ -1,0 +1,23 @@
+app-id: io.github.ops_talks.KubeIdea
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: kube-idea
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --share=network
+  - --device=dri
+  - --filesystem=~/.kube:ro
+modules:
+  - name: kube-idea
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/kube-idea /app/bin
+      - cp -a * /app/kube-idea/
+      - if [ ! -f /app/kube-idea/kube-idea ]; then echo "Error: /app/kube-idea/kube-idea not found in Flatpak build." >&2; exit 1; fi; chmod +x /app/kube-idea/kube-idea
+      - ln -sf /app/kube-idea/kube-idea /app/bin/kube-idea
+    sources:
+      - type: dir
+        path: bin

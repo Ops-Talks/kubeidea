@@ -32,7 +32,7 @@ managed through the OS keyring provider whenever possible.
 
 ## Telemetry
 
-- Telemetry is **100 % opt-in** and **disabled by default**.
+- Telemetry is **100% opt-in** and **disabled by default**.
 - No sensitive data is ever collected.
 - Users can toggle telemetry from the Settings page.
 

@@ -55,7 +55,6 @@ nav:
   - Plugins: plugins.md
   - Security: security.md
   - Contributing: contributing.md
-  - Roadmap: roadmap.md
 
 extra_css:
   - stylesheets/extra.css

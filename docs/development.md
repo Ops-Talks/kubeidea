@@ -88,9 +88,9 @@ following jobs:
 | `windows-latest`   | `kube-idea-windows.zip` | `windows`|
 
 Each runner sets up Python 3.12, installs Poetry and project
-dependencies, then executes `flet build <target> --yes src/` to produce
-a native binary. The `--yes` flag auto-confirms any interactive prompts
-(e.g. Flutter SDK installation) so the build runs unattended in CI.
+dependencies, then executes `poetry run flet build <target> --yes src/`
+to produce a native binary. The `--yes` flag auto-confirms any interactive
+prompts (e.g. Flutter SDK installation) so the build runs unattended in CI.
 After the build, each runner packages the binary into the
 platform-appropriate format:
 

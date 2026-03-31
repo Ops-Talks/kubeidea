@@ -34,8 +34,9 @@ poetry run flet build
     project uses a
     [GitHub Actions release workflow](https://github.com/Ops-Talks/kubeidea/blob/main/.github/workflows/release.yml)
     that produces a `.deb` package for Debian/Ubuntu, a `.dmg` disk image
-    for macOS, a `.zip` archive for Windows, and a `.tar.gz` for Fedora,
-    then attaches them to each GitHub Release.
+    for macOS, a `.zip` archive for Windows, a `.tar.gz` for Fedora, and a
+    `.flatpak` bundle for any Linux distro with Flatpak support, then
+    attaches them to each GitHub Release.
 
 ## Run tests
 

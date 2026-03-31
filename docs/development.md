@@ -107,14 +107,23 @@ container. It installs Fedora-specific system packages via `dnf`
 binary linked against Fedora's libraries and packages it as a
 `.tar.gz` archive.
 
-**`release`** — waits for both `build` and `build-fedora` to finish,
-downloads all four artifacts, and publishes a GitHub Release with the
-following assets:
+**`build-flatpak`** — runs on `ubuntu-latest`, builds the Linux binary
+with Flet, installs `flatpak-builder` and the `org.freedesktop`
+runtime/SDK, then packages the application as a `.flatpak` bundle
+using the manifest at `flatpak/io.github.ops_talks.KubeIdea.yml`.
+The Flatpak grants the application network access (for Kubernetes
+API connectivity), display access (X11/Wayland), and read-only
+access to `~/.kube` (for kubeconfig).
+
+**`release`** — waits for `build`, `build-fedora`, and `build-flatpak`
+to finish, downloads all five artifacts, and publishes a GitHub
+Release with the following assets:
 
 - `kube-idea-linux.deb` — Debian/Ubuntu package
 - `kube-idea-macos.dmg` — macOS disk image
 - `kube-idea-windows.zip` — Windows archive
 - `kube-idea-fedora.tar.gz` — Fedora archive
+- `kube-idea.flatpak` — Flatpak bundle (works on any Linux distro with Flatpak)
 
 Users can then download the package for their platform from the
 [Releases](https://github.com/Ops-Talks/kubeidea/releases) page.

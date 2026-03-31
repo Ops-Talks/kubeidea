@@ -58,7 +58,7 @@ jobs:
           Priority: optional
           EOF
           mkdir -p dist
-          dpkg-deb --build pkg dist/kube-idea-linux.deb
+          dpkg-deb --root-owner-group --build pkg dist/kube-idea-linux.deb
 
       - name: Package .dmg (macOS)
         if: matrix.target == 'macos'

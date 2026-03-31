@@ -50,7 +50,7 @@ The project provides three GitHub Actions workflows under
 | Workflow         | Trigger                       | What it does                                                |
 | ---------------- | ----------------------------- | ----------------------------------------------------------- |
 | **ci.yml**       | Push / PR to `main`           | Lint (`ruff`, `mypy`), test (`pytest`), build docs          |
-| **release.yml**  | Tag push (`v*`)               | Build desktop binaries for Linux, macOS, Windows, and Fedora via `flet build` and attach them to the GitHub Release |
+| **release.yml**  | Tag push (`v*`)               | Build desktop binaries for Linux, macOS, Windows, Fedora, and Flatpak via `flet build` and attach them to the GitHub Release |
 | **docs.yml**     | Push to `main` (docs changes) | Build and deploy MkDocs site to GitHub Pages                |
 
 ### Creating a release with binaries

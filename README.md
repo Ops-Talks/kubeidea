@@ -155,17 +155,6 @@ poetry run mypy src/kubeidea/
 
 ---
 
-## Roadmap
-
-| Phase | EPICs | Timeline |
-|---|---|---|
-| Foundation | App Desktop (Flet + Packaging) · Context Manager | Month 1–2 |
-| Troubleshooting | Logs, Exec, Port-forward · Metrics | Month 3–4 |
-| Governance | YAML Editor · RBAC Inspector | Month 5 |
-| Ecosystem | Plugins · Distribution · Security/Compliance | Month 6 |
-
----
-
 ## License
 
 See [LICENSE](LICENSE) for details.

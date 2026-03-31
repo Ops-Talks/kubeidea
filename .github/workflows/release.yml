@@ -40,11 +40,45 @@ jobs:
       - name: Build desktop binary
         run: poetry run flet build ${{ matrix.target }} --yes src/
 
+      - name: Package .deb (Linux)
+        if: matrix.target == 'linux'
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p pkg/DEBIAN pkg/opt/kube-idea pkg/usr/bin
+          cp -r build/* pkg/opt/kube-idea/
+          [ -f pkg/opt/kube-idea/kube-idea ] && chmod +x pkg/opt/kube-idea/kube-idea
+          ln -sf /opt/kube-idea/kube-idea pkg/usr/bin/kube-idea
+          cat > pkg/DEBIAN/control <<EOF
+          Package: kube-idea
+          Version: ${VERSION}
+          Architecture: amd64
+          Maintainer: Ops-Talks <ops-talks@users.noreply.github.com>
+          Description: Kubernetes IDE desktop application
+          Section: utils
+          Priority: optional
+          EOF
+          mkdir -p dist
+          dpkg-deb --build pkg dist/kube-idea-linux.deb
+
+      - name: Package .dmg (macOS)
+        if: matrix.target == 'macos'
+        run: |
+          mkdir -p dist
+          hdiutil create -volname "Kube-IDEA" -srcfolder build/ \
+            -ov -format UDZO dist/kube-idea-macos.dmg
+
+      - name: Package .zip (Windows)
+        if: matrix.target == 'windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          Compress-Archive -Path build\* -DestinationPath dist\kube-idea-windows.zip
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: build/
+          path: dist/
 
   build-fedora:
     runs-on: ubuntu-latest
@@ -67,11 +101,16 @@ jobs:
       - name: Build desktop binary
         run: poetry run flet build linux --yes src/
 
+      - name: Package archive
+        run: |
+          mkdir -p dist
+          tar -czf dist/kube-idea-fedora.tar.gz -C build .
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: kube-idea-fedora
-          path: build/
+          path: dist/
 
   release:
     needs: [build, build-fedora]
@@ -84,20 +123,12 @@ jobs:
         with:
           path: artifacts/
 
-      - name: Create archives
-        run: |
-          cd artifacts
-          for dir in */; do
-            name="${dir%/}"
-            tar -czf "../${name}.tar.gz" -C "$dir" .
-          done
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            kube-idea-linux.tar.gz
-            kube-idea-macos.tar.gz
-            kube-idea-windows.tar.gz
-            kube-idea-fedora.tar.gz
+            artifacts/kube-idea-linux/kube-idea-linux.deb
+            artifacts/kube-idea-macos/kube-idea-macos.dmg
+            artifacts/kube-idea-windows/kube-idea-windows.zip
+            artifacts/kube-idea-fedora/kube-idea-fedora.tar.gz

@@ -81,31 +81,40 @@ following jobs:
 
 **`build` (matrix)** — runs in parallel across three GitHub-hosted runners:
 
-| Runner             | Artifact              | Target   |
-| ------------------ | --------------------- | -------- |
-| `ubuntu-latest`    | `kube-idea-linux`     | `linux`  |
-| `macos-latest`     | `kube-idea-macos`     | `macos`  |
-| `windows-latest`   | `kube-idea-windows`   | `windows`|
+| Runner             | Package format          | Target   |
+| ------------------ | ----------------------- | -------- |
+| `ubuntu-latest`    | `kube-idea-linux.deb`   | `linux`  |
+| `macos-latest`     | `kube-idea-macos.dmg`   | `macos`  |
+| `windows-latest`   | `kube-idea-windows.zip` | `windows`|
 
 Each runner sets up Python 3.12, installs Poetry and project
 dependencies, then executes `flet build <target> --yes src/` to produce
 a native binary. The `--yes` flag auto-confirms any interactive prompts
 (e.g. Flutter SDK installation) so the build runs unattended in CI.
+After the build, each runner packages the binary into the
+platform-appropriate format:
+
+- **Linux** — a `.deb` package built with `dpkg-deb`, which installs
+  the application to `/opt/kube-idea` and symlinks the executable into
+  `/usr/bin`.
+- **macOS** — a `.dmg` disk image created with `hdiutil`.
+- **Windows** — a `.zip` archive produced by PowerShell's
+  `Compress-Archive`.
 
 **`build-fedora`** — runs on `ubuntu-latest` inside a `fedora:latest`
 container. It installs Fedora-specific system packages via `dnf`
 (Python, clang, cmake, GTK3-devel, etc.), then builds the Linux
-binary linked against Fedora's libraries, producing the
-`kube-idea-fedora` artifact.
+binary linked against Fedora's libraries and packages it as a
+`.tar.gz` archive.
 
 **`release`** — waits for both `build` and `build-fedora` to finish,
-downloads all four artifacts, creates `.tar.gz` archives, and
-publishes a GitHub Release with the following assets:
+downloads all four artifacts, and publishes a GitHub Release with the
+following assets:
 
-- `kube-idea-linux.tar.gz`
-- `kube-idea-macos.tar.gz`
-- `kube-idea-windows.tar.gz`
-- `kube-idea-fedora.tar.gz`
+- `kube-idea-linux.deb` — Debian/Ubuntu package
+- `kube-idea-macos.dmg` — macOS disk image
+- `kube-idea-windows.zip` — Windows archive
+- `kube-idea-fedora.tar.gz` — Fedora archive
 
-Users can then download the binary for their platform from the
+Users can then download the package for their platform from the
 [Releases](https://github.com/Ops-Talks/kubeidea/releases) page.

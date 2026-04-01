@@ -93,7 +93,9 @@ class DetailPanel(ft.Column):
         self._info_view = ft.ListView(expand=True, spacing=4, padding=12)
         self._events_view = ft.ListView(expand=True, spacing=4, padding=12)
         self._yaml_view = ft.Column(
-            expand=True, scroll=ft.ScrollMode.AUTO, spacing=8,
+            expand=True,
+            scroll=ft.ScrollMode.AUTO,
+            spacing=8,
         )
 
         self._build_empty()
@@ -123,16 +125,19 @@ class DetailPanel(ft.Column):
                 content=ft.Column(
                     controls=[
                         ft.Icon(
-                            ft.Icons.TOUCH_APP, size=48,
+                            ft.Icons.TOUCH_APP,
+                            size=48,
                             color=ft.Colors.GREY_600,
                         ),
                         ft.Text(
                             "Select a resource",
-                            size=14, color=ft.Colors.GREY_500,
+                            size=14,
+                            color=ft.Colors.GREY_500,
                         ),
                         ft.Text(
                             "Click any item on the left to view details.",
-                            size=12, color=ft.Colors.GREY_600,
+                            size=12,
+                            color=ft.Colors.GREY_600,
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -159,11 +164,13 @@ class DetailPanel(ft.Column):
                     ft.Column(
                         controls=[
                             ft.Text(
-                                res_name, size=16,
+                                res_name,
+                                size=16,
                                 weight=ft.FontWeight.BOLD,
                             ),
                             ft.Text(
-                                self._kind, size=11,
+                                self._kind,
+                                size=11,
                                 color=ft.Colors.GREY_400,
                             ),
                         ],
@@ -193,14 +200,16 @@ class DetailPanel(ft.Column):
         self._events_view.controls.append(
             ft.Text(
                 "Switch to this tab to load events.",
-                size=12, color=ft.Colors.GREY_500,
+                size=12,
+                color=ft.Colors.GREY_500,
             ),
         )
         self._yaml_view.controls.clear()
         self._yaml_view.controls.append(
             ft.Text(
                 "Switch to this tab to load YAML.",
-                size=12, color=ft.Colors.GREY_500,
+                size=12,
+                color=ft.Colors.GREY_500,
             ),
         )
 
@@ -266,7 +275,8 @@ class DetailPanel(ft.Column):
             allowed = self._can_i("patch")
             buttons.append(
                 ft.Button(
-                    content=ft.Text("Scale"), icon=ft.Icons.TUNE,
+                    content=ft.Text("Scale"),
+                    icon=ft.Icons.TUNE,
                     on_click=self._on_scale_click,
                     disabled=not allowed,
                     tooltip=None if allowed else "Insufficient permissions",
@@ -276,7 +286,8 @@ class DetailPanel(ft.Column):
             allowed = self._can_i("patch")
             buttons.append(
                 ft.Button(
-                    content=ft.Text("Restart"), icon=ft.Icons.RESTART_ALT,
+                    content=ft.Text("Restart"),
+                    icon=ft.Icons.RESTART_ALT,
                     on_click=self._on_restart_click,
                     disabled=not allowed,
                     tooltip=None if allowed else "Insufficient permissions",
@@ -286,7 +297,8 @@ class DetailPanel(ft.Column):
             allowed = self._can_i("delete")
             buttons.append(
                 ft.Button(
-                    content=ft.Text("Delete"), icon=ft.Icons.DELETE,
+                    content=ft.Text("Delete"),
+                    icon=ft.Icons.DELETE,
                     on_click=self._on_delete_click,
                     disabled=not allowed,
                     tooltip=None if allowed else "Insufficient permissions",
@@ -348,7 +360,8 @@ class DetailPanel(ft.Column):
             self._events_view.controls.append(
                 ft.Text(
                     "Events view not available for this resource.",
-                    size=12, color=ft.Colors.GREY_500,
+                    size=12,
+                    color=ft.Colors.GREY_500,
                 ),
             )
             self._page.update()
@@ -356,12 +369,16 @@ class DetailPanel(ft.Column):
         try:
             ns = getattr(self._resource, "namespace", "default")
             events = await asyncio.to_thread(
-                list_events, client, ns, involved_object_name=res_name,
+                list_events,
+                client,
+                ns,
+                involved_object_name=res_name,
             )
             if not events:
                 self._events_view.controls.append(
                     ft.Text(
-                        "No events found.", size=12,
+                        "No events found.",
+                        size=12,
                         color=ft.Colors.GREY_500,
                     ),
                 )
@@ -384,16 +401,19 @@ class DetailPanel(ft.Column):
                         controls=[
                             ft.Icon(ft.Icons.CIRCLE, size=8, color=color),
                             ft.Text(
-                                ev.reason, size=12,
+                                ev.reason,
+                                size=12,
                                 weight=ft.FontWeight.W_500,
                             ),
                             ft.Text(
-                                f"×{ev.count}", size=11,
+                                f"×{ev.count}",
+                                size=11,
                                 color=ft.Colors.GREY_400,
                             ),
                             ft.Container(expand=True),
                             ft.Text(
-                                ev.last_seen, size=11,
+                                ev.last_seen,
+                                size=11,
                                 color=ft.Colors.GREY_500,
                             ),
                         ],
@@ -401,8 +421,10 @@ class DetailPanel(ft.Column):
                         spacing=6,
                     ),
                     ft.Text(
-                        ev.message, size=11,
-                        color=ft.Colors.GREY_400, selectable=True,
+                        ev.message,
+                        size=11,
+                        color=ft.Colors.GREY_400,
+                        selectable=True,
                     ),
                 ],
                 spacing=2,
@@ -425,7 +447,8 @@ class DetailPanel(ft.Column):
             self._yaml_view.controls.append(
                 ft.Text(
                     "YAML view not available for this resource.",
-                    size=12, color=ft.Colors.GREY_500,
+                    size=12,
+                    color=ft.Colors.GREY_500,
                 ),
             )
             self._page.update()
@@ -433,7 +456,11 @@ class DetailPanel(ft.Column):
         try:
             ns = getattr(self._resource, "namespace", "default")
             self._yaml_text = await asyncio.to_thread(
-                get_resource_yaml, client, api_kind, res_name, ns,
+                get_resource_yaml,
+                client,
+                api_kind,
+                res_name,
+                ns,
             )
             self._yaml_view.controls.append(
                 ft.Row(
@@ -450,8 +477,10 @@ class DetailPanel(ft.Column):
             self._yaml_view.controls.append(
                 ft.Container(
                     content=ft.Text(
-                        self._yaml_text, size=11,
-                        font_family="monospace", selectable=True,
+                        self._yaml_text,
+                        size=11,
+                        font_family="monospace",
+                        selectable=True,
                     ),
                     bgcolor=ft.Colors.with_opacity(0.05, ft.Colors.WHITE),
                     padding=12,
@@ -483,7 +512,11 @@ class DetailPanel(ft.Column):
                 return
             ns = getattr(res, "namespace", "default")
             ok = await asyncio.to_thread(
-                delete_resource, client, api_kind, res_name, ns,
+                delete_resource,
+                client,
+                api_kind,
+                res_name,
+                ns,
             )
             if ok:
                 self._page.open(
@@ -510,8 +543,7 @@ class DetailPanel(ft.Column):
         dlg = ft.AlertDialog(
             title=ft.Text("Confirm Delete"),
             content=ft.Text(
-                f"Delete {self._kind} '{res_name}'?\n"
-                "This action cannot be undone.",
+                f"Delete {self._kind} '{res_name}'?\n" "This action cannot be undone.",
             ),
             actions=[
                 ft.Button(content=ft.Text("Cancel"), on_click=cancel),
@@ -547,7 +579,12 @@ class DetailPanel(ft.Column):
                 return
             ns = getattr(res, "namespace", "default")
             ok = await asyncio.to_thread(
-                scale_resource, client, api_kind, res.name, ns, count,
+                scale_resource,
+                client,
+                api_kind,
+                res.name,
+                ns,
+                count,
             )
             if ok:
                 self._page.open(
@@ -602,7 +639,11 @@ class DetailPanel(ft.Column):
                 return
             ns = getattr(res, "namespace", "default")
             ok = await asyncio.to_thread(
-                restart_resource, client, api_kind, res.name, ns,
+                restart_resource,
+                client,
+                api_kind,
+                res.name,
+                ns,
             )
             if ok:
                 self._page.open(
@@ -649,8 +690,10 @@ def _kv(label: str, value: str) -> ft.Container:
             controls=[
                 ft.Text(label, size=12, color=ft.Colors.GREY_400, width=130),
                 ft.Text(
-                    str(value), size=12,
-                    selectable=True, expand=True,
+                    str(value),
+                    size=12,
+                    selectable=True,
+                    expand=True,
                 ),
             ],
             spacing=8,
@@ -674,12 +717,17 @@ def _labels_row(title: str, labels: dict[str, str]) -> ft.Container:
         content=ft.Row(
             controls=[
                 ft.Text(
-                    title, size=12,
-                    color=ft.Colors.GREY_400, width=130,
+                    title,
+                    size=12,
+                    color=ft.Colors.GREY_400,
+                    width=130,
                 ),
                 ft.Row(
-                    controls=chips, wrap=True,
-                    spacing=4, run_spacing=4, expand=True,
+                    controls=chips,
+                    wrap=True,
+                    spacing=4,
+                    run_spacing=4,
+                    expand=True,
                 ),
             ],
             spacing=8,
@@ -695,8 +743,10 @@ def _error_row(msg: str) -> ft.Container:
             controls=[
                 ft.Icon(ft.Icons.ERROR, size=16, color=ft.Colors.RED_400),
                 ft.Text(
-                    msg, size=12,
-                    color=ft.Colors.RED_300, selectable=True,
+                    msg,
+                    size=12,
+                    color=ft.Colors.RED_300,
+                    selectable=True,
                 ),
             ],
             spacing=6,
@@ -721,7 +771,8 @@ def _pod_info(pod: PodInfo, rows: list[ft.Control]) -> None:
         rows.append(
             ft.Container(
                 content=ft.Text(
-                    "Containers", size=13,
+                    "Containers",
+                    size=13,
                     weight=ft.FontWeight.BOLD,
                 ),
                 padding=ft.Padding.only(left=4, top=8, bottom=4),
@@ -737,23 +788,25 @@ def _pod_info(pod: PodInfo, rows: list[ft.Control]) -> None:
                                 controls=[
                                     ft.Icon(
                                         ft.Icons.CIRCLE,
-                                        size=8, color=c_color,
+                                        size=8,
+                                        color=c_color,
                                     ),
                                     ft.Text(
-                                        c.name, size=12,
+                                        c.name,
+                                        size=12,
                                         weight=ft.FontWeight.W_500,
                                     ),
                                 ],
                                 spacing=6,
                             ),
                             ft.Text(
-                                c.image, size=11,
+                                c.image,
+                                size=11,
                                 color=ft.Colors.GREY_400,
                                 selectable=True,
                             ),
                             ft.Text(
-                                f"State: {c.state}  ·  "
-                                f"Restarts: {c.restart_count}",
+                                f"State: {c.state}  ·  " f"Restarts: {c.restart_count}",
                                 size=11,
                                 color=ft.Colors.GREY_500,
                             ),
@@ -762,7 +815,8 @@ def _pod_info(pod: PodInfo, rows: list[ft.Control]) -> None:
                     ),
                     padding=ft.Padding.only(left=16, top=4, bottom=4),
                     bgcolor=ft.Colors.with_opacity(
-                        0.03, ft.Colors.WHITE,
+                        0.03,
+                        ft.Colors.WHITE,
                     ),
                     border_radius=4,
                 ),
@@ -770,7 +824,8 @@ def _pod_info(pod: PodInfo, rows: list[ft.Control]) -> None:
 
 
 def _deployment_info(
-    dep: DeploymentInfo, rows: list[ft.Control],
+    dep: DeploymentInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Replicas", str(dep.replicas)))
     rows.append(_kv("Ready", str(dep.ready_replicas)))
@@ -779,14 +834,16 @@ def _deployment_info(
 
 
 def _statefulset_info(
-    ss: StatefulSetInfo, rows: list[ft.Control],
+    ss: StatefulSetInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Replicas", str(ss.replicas)))
     rows.append(_kv("Ready", str(ss.ready_replicas)))
 
 
 def _daemonset_info(
-    ds: DaemonSetInfo, rows: list[ft.Control],
+    ds: DaemonSetInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Desired", str(ds.desired)))
     rows.append(_kv("Current", str(ds.current)))
@@ -799,7 +856,8 @@ def _job_info(job: JobInfo, rows: list[ft.Control]) -> None:
 
 
 def _cronjob_info(
-    cj: CronJobInfo, rows: list[ft.Control],
+    cj: CronJobInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Schedule", cj.schedule))
     rows.append(_kv("Suspend", str(cj.suspend)))
@@ -808,7 +866,8 @@ def _cronjob_info(
 
 
 def _service_info(
-    svc: ServiceInfo, rows: list[ft.Control],
+    svc: ServiceInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Type", svc.type))
     rows.append(_kv("Cluster IP", svc.cluster_ip or "—"))
@@ -818,7 +877,8 @@ def _service_info(
 
 
 def _ingress_info(
-    ing: IngressInfo, rows: list[ft.Control],
+    ing: IngressInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Hosts", ", ".join(ing.hosts) or "—"))
     rows.append(_kv("Paths", ", ".join(ing.paths) or "—"))
@@ -826,7 +886,8 @@ def _ingress_info(
 
 
 def _netpol_info(
-    np_res: NetworkPolicyInfo, rows: list[ft.Control],
+    np_res: NetworkPolicyInfo,
+    rows: list[ft.Control],
 ) -> None:
     types = ", ".join(np_res.policy_types) or "—"
     rows.append(_kv("Policy Types", types))
@@ -835,27 +896,31 @@ def _netpol_info(
 
 
 def _configmap_info(
-    cm: ConfigMapInfo, rows: list[ft.Control],
+    cm: ConfigMapInfo,
+    rows: list[ft.Control],
 ) -> None:
     keys = ", ".join(cm.data_keys) or "—"
     rows.append(_kv("Data Keys", keys))
 
 
 def _secret_info(
-    sec: SecretInfo, rows: list[ft.Control],
+    sec: SecretInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Type", sec.type))
     rows.append(_kv("Data Keys", ", ".join(sec.data_keys) or "—"))
 
 
 def _sa_info(
-    sa: ServiceAccountInfo, rows: list[ft.Control],
+    sa: ServiceAccountInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Secrets", str(sa.secrets)))
 
 
 def _pv_info(
-    pv: PersistentVolumeInfo, rows: list[ft.Control],
+    pv: PersistentVolumeInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Capacity", pv.capacity))
     rows.append(_kv("Access Modes", ", ".join(pv.access_modes) or "—"))
@@ -866,7 +931,8 @@ def _pv_info(
 
 
 def _pvc_info(
-    pvc: PersistentVolumeClaimInfo, rows: list[ft.Control],
+    pvc: PersistentVolumeClaimInfo,
+    rows: list[ft.Control],
 ) -> None:
     rows.append(_kv("Status", pvc.status))
     rows.append(_kv("Volume", pvc.volume or "—"))

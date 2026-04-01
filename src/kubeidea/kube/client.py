@@ -25,9 +25,7 @@ class KubeConfigManager:
     """
 
     def __init__(self, kubeconfig_path: str | None = None) -> None:
-        self.kubeconfig_path = kubeconfig_path or str(
-            Path.home() / ".kube" / "config"
-        )
+        self.kubeconfig_path = kubeconfig_path or str(Path.home() / ".kube" / "config")
 
     def list_contexts(self) -> list[KubeContext]:
         """List all available contexts from the kubeconfig file.
@@ -38,9 +36,7 @@ class KubeConfigManager:
         try:
             from kubernetes.config import list_kube_config_contexts
 
-            contexts, _ = list_kube_config_contexts(
-                config_file=self.kubeconfig_path
-            )
+            contexts, _ = list_kube_config_contexts(config_file=self.kubeconfig_path)
             return [
                 KubeContext(
                     name=ctx.get("name", ""),
@@ -64,7 +60,5 @@ class KubeConfigManager:
         """
         from kubernetes import client, config
 
-        config.load_kube_config(
-            config_file=self.kubeconfig_path, context=context_name
-        )
+        config.load_kube_config(config_file=self.kubeconfig_path, context=context_name)
         return client.ApiClient()

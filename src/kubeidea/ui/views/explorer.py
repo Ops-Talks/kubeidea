@@ -86,25 +86,25 @@ def _filter_by_labels(items: list[Any], selector: str) -> list[Any]:
     required = _parse_label_selector(selector)
     if not required:
         return items
-    return [
-        r for r in items
-        if all(
-            getattr(r, "labels", {}).get(k) == v
-            for k, v in required.items()
-        )
-    ]
+    return [r for r in items if all(getattr(r, "labels", {}).get(k) == v for k, v in required.items())]
 
 
 def _sort_resources(
-    items: list[Any], field: str, ascending: bool,
+    items: list[Any],
+    field: str,
+    ascending: bool,
 ) -> list[Any]:
     """Sort resources by the given field."""
     if not items:
         return items
-    if field == "name":
-        key_fn = lambda r: getattr(r, "name", getattr(r, "reason", "")).lower()
-    else:  # "age" -- lexicographic on the age string (e.g. "2d", "5h")
-        key_fn = lambda r: getattr(r, "age", "")
+
+    def _name_key(r: Any) -> str:
+        return getattr(r, "name", getattr(r, "reason", "")).lower()
+
+    def _age_key(r: Any) -> str:
+        return getattr(r, "age", "")
+
+    key_fn = _name_key if field == "name" else _age_key
     return sorted(items, key=key_fn, reverse=not ascending)
 
 
@@ -188,10 +188,7 @@ class ExplorerView(ft.Column):
         )
 
         # ── one ListView per category tab ─────────────────────────
-        self._category_lists: list[ft.ListView] = [
-            ft.ListView(expand=True, spacing=2, padding=8)
-            for _ in CATEGORIES
-        ]
+        self._category_lists: list[ft.ListView] = [ft.ListView(expand=True, spacing=2, padding=8) for _ in CATEGORIES]
 
         # ── category tabs (Tabs ▸ TabBar + TabBarView) ────────────
         self._tabs = ft.Tabs(
@@ -203,10 +200,7 @@ class ExplorerView(ft.Column):
                 expand=True,
                 controls=[
                     ft.TabBar(
-                        tabs=[
-                            ft.Tab(label=cat[0], icon=cat[1])
-                            for cat in CATEGORIES
-                        ],
+                        tabs=[ft.Tab(label=cat[0], icon=cat[1]) for cat in CATEGORIES],
                     ),
                     ft.TabBarView(
                         expand=True,
@@ -231,7 +225,8 @@ class ExplorerView(ft.Column):
                 content=ft.Row(
                     controls=[
                         ft.Text(
-                            "Explorer", size=24,
+                            "Explorer",
+                            size=24,
                             weight=ft.FontWeight.BOLD,
                         ),
                         self._connection_chip,
@@ -255,7 +250,10 @@ class ExplorerView(ft.Column):
                     spacing=12,
                 ),
                 padding=ft.Padding.only(
-                    left=24, right=24, top=8, bottom=4,
+                    left=24,
+                    right=24,
+                    top=8,
+                    bottom=4,
                 ),
             ),
             ft.Divider(height=1),
@@ -265,7 +263,8 @@ class ExplorerView(ft.Column):
                     ft.Container(content=self._tabs, expand=2),
                     ft.VerticalDivider(width=1),
                     ft.Container(
-                        content=self._detail_panel, expand=3,
+                        content=self._detail_panel,
+                        expand=3,
                     ),
                 ],
                 expand=True,
@@ -285,15 +284,15 @@ class ExplorerView(ft.Column):
             self._ctx.current_context or "",
         )
         self._connection_chip.leading = ft.Icon(
-            ft.Icons.CLOUD_DONE, size=16,
+            ft.Icons.CLOUD_DONE,
+            size=16,
         )
         self._connection_chip.bgcolor = ft.Colors.with_opacity(
-            0.1, ft.Colors.GREEN,
+            0.1,
+            ft.Colors.GREEN,
         )
 
-        self._ns_dropdown.options = [
-            ft.DropdownOption(key=ns) for ns in self._ctx.namespaces
-        ]
+        self._ns_dropdown.options = [ft.DropdownOption(key=ns) for ns in self._ctx.namespaces]
         self._ns_dropdown.value = self._ctx.current_namespace
 
         await asyncio.to_thread(self._load_all_resources)
@@ -325,7 +324,9 @@ class ExplorerView(ft.Column):
             self._render_category(idx, kinds)
 
     def _render_category(
-        self, cat_idx: int, kinds: list[str],
+        self,
+        cat_idx: int,
+        kinds: list[str],
     ) -> None:
         lv = self._category_lists[cat_idx]
         lv.controls.clear()
@@ -340,9 +341,12 @@ class ExplorerView(ft.Column):
             # Name filter
             if search:
                 items = [
-                    r for r in items
-                    if search in getattr(
-                        r, "name",
+                    r
+                    for r in items
+                    if search
+                    in getattr(
+                        r,
+                        "name",
                         getattr(r, "reason", ""),
                     ).lower()
                 ]
@@ -353,14 +357,13 @@ class ExplorerView(ft.Column):
 
             # Status filter
             if status_filter:
-                items = [
-                    r for r in items
-                    if getattr(r, "status", "") == status_filter
-                ]
+                items = [r for r in items if getattr(r, "status", "") == status_filter]
 
             # Sorting
             items = _sort_resources(
-                items, self._sort_field, self._sort_ascending,
+                items,
+                self._sort_field,
+                self._sort_ascending,
             )
 
             if not items:
@@ -370,21 +373,21 @@ class ExplorerView(ft.Column):
             for resource in items:
                 lv.controls.append(
                     build_resource_row(
-                        kind, resource, self._on_resource_selected,
+                        kind,
+                        resource,
+                        self._on_resource_selected,
                     ),
                 )
 
         if not any_visible:
             has_filter = search or label_filter or status_filter
-            msg = (
-                "No matching resources."
-                if has_filter
-                else "No resources found."
-            )
+            msg = "No matching resources." if has_filter else "No resources found."
             lv.controls.append(
                 ft.Container(
                     content=ft.Text(
-                        msg, size=13, color=ft.Colors.GREY_500,
+                        msg,
+                        size=13,
+                        color=ft.Colors.GREY_500,
                     ),
                     padding=20,
                     alignment=ft.Alignment(0, 0),
@@ -396,10 +399,12 @@ class ExplorerView(ft.Column):
     def _show_not_connected(self) -> None:
         self._connection_chip.label = ft.Text("Not connected")
         self._connection_chip.leading = ft.Icon(
-            ft.Icons.CLOUD_OFF, size=16,
+            ft.Icons.CLOUD_OFF,
+            size=16,
         )
         self._connection_chip.bgcolor = ft.Colors.with_opacity(
-            0.1, ft.Colors.RED,
+            0.1,
+            ft.Colors.RED,
         )
         self._ns_dropdown.options = []
         self._ns_dropdown.value = None
@@ -418,16 +423,19 @@ class ExplorerView(ft.Column):
             content=ft.Column(
                 controls=[
                     ft.Icon(
-                        ft.Icons.CLOUD_OFF, size=40,
+                        ft.Icons.CLOUD_OFF,
+                        size=40,
                         color=ft.Colors.GREY_600,
                     ),
                     ft.Text(
                         "Connect to a cluster first.",
-                        size=14, color=ft.Colors.GREY_500,
+                        size=14,
+                        color=ft.Colors.GREY_500,
                     ),
                     ft.Text(
                         "Go to Clusters and press Connect.",
-                        size=12, color=ft.Colors.GREY_600,
+                        size=12,
+                        color=ft.Colors.GREY_600,
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,

@@ -33,7 +33,8 @@ async def main(page: ft.Page) -> None:
         await explorer_view.refresh()
 
     clusters_view = ClustersView(
-        page, app_ctx,
+        page,
+        app_ctx,
         on_connected=_on_cluster_connected,
         on_disconnected=_on_cluster_disconnected,
     )

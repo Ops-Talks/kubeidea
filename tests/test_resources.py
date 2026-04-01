@@ -188,9 +188,7 @@ class TestModelCreation:
         assert ds.desired == 3
 
     def test_persistent_volume_info(self) -> None:
-        pv = PersistentVolumeInfo(
-            name="pv-1", capacity="10Gi", reclaim_policy="Retain", status="Bound", age="10d"
-        )
+        pv = PersistentVolumeInfo(name="pv-1", capacity="10Gi", reclaim_policy="Retain", status="Bound", age="10d")
         assert pv.claim is None
 
     def test_persistent_volume_claim_info(self) -> None:
@@ -1666,12 +1664,7 @@ class TestApplyResource:
     def test_create_cluster_scoped_success(self) -> None:
         """apply_resource should create a cluster-scoped resource."""
         mock_client = MagicMock()
-        manifest = (
-            "apiVersion: v1\n"
-            "kind: Namespace\n"
-            "metadata:\n"
-            "  name: test-ns\n"
-        )
+        manifest = "apiVersion: v1\n" "kind: Namespace\n" "metadata:\n" "  name: test-ns\n"
         with patch("kubernetes.client.CoreV1Api") as mock_core:
             mock_api = MagicMock()
             mock_core.return_value = mock_api
@@ -1685,13 +1678,7 @@ class TestApplyResource:
         from kubernetes.client.rest import ApiException
 
         mock_client = MagicMock()
-        manifest = (
-            "apiVersion: apps/v1\n"
-            "kind: Deployment\n"
-            "metadata:\n"
-            "  name: nginx\n"
-            "  namespace: default\n"
-        )
+        manifest = "apiVersion: apps/v1\n" "kind: Deployment\n" "metadata:\n" "  name: nginx\n" "  namespace: default\n"
         with (
             patch("kubernetes.client.AppsV1Api") as mock_apps,
         ):
@@ -1712,13 +1699,7 @@ class TestApplyResource:
         from kubernetes.client.rest import ApiException
 
         mock_client = MagicMock()
-        manifest = (
-            "apiVersion: v1\n"
-            "kind: Pod\n"
-            "metadata:\n"
-            "  name: test-pod\n"
-            "  namespace: default\n"
-        )
+        manifest = "apiVersion: v1\n" "kind: Pod\n" "metadata:\n" "  name: test-pod\n" "  namespace: default\n"
         with patch("kubernetes.client.CoreV1Api") as mock_core:
             mock_api = MagicMock()
             mock_core.return_value = mock_api
@@ -1761,13 +1742,7 @@ class TestApplyResource:
         from kubernetes.client.rest import ApiException
 
         mock_client = MagicMock()
-        manifest = (
-            "apiVersion: v1\n"
-            "kind: Service\n"
-            "metadata:\n"
-            "  name: my-svc\n"
-            "  namespace: default\n"
-        )
+        manifest = "apiVersion: v1\n" "kind: Service\n" "metadata:\n" "  name: my-svc\n" "  namespace: default\n"
         with patch("kubernetes.client.CoreV1Api") as mock_core:
             mock_api = MagicMock()
             mock_core.return_value = mock_api
@@ -1784,12 +1759,7 @@ class TestApplyResource:
     def test_default_namespace(self) -> None:
         """apply_resource should default to 'default' namespace when not specified."""
         mock_client = MagicMock()
-        manifest = (
-            "apiVersion: v1\n"
-            "kind: Secret\n"
-            "metadata:\n"
-            "  name: my-secret\n"
-        )
+        manifest = "apiVersion: v1\n" "kind: Secret\n" "metadata:\n" "  name: my-secret\n"
         with patch("kubernetes.client.CoreV1Api") as mock_core:
             mock_api = MagicMock()
             mock_core.return_value = mock_api

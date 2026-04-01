@@ -42,11 +42,7 @@ def _resource_age(creation_timestamp: Any) -> str:
         return "Unknown"
     now = datetime.now(UTC)
     if hasattr(creation_timestamp, "timestamp"):
-        created = (
-            creation_timestamp.replace(tzinfo=UTC)
-            if creation_timestamp.tzinfo is None
-            else creation_timestamp
-        )
+        created = creation_timestamp.replace(tzinfo=UTC) if creation_timestamp.tzinfo is None else creation_timestamp
     else:
         return "Unknown"
     delta = now - created
@@ -234,7 +230,7 @@ def list_nodes(api_client: Any) -> list[NodeInfo]:
                 if cond.type == "Ready" and cond.status == "True":
                     status = "Ready"
         roles: list[str] = []
-        for lbl in (node.metadata.labels or {}):
+        for lbl in node.metadata.labels or {}:
             if lbl.startswith("node-role.kubernetes.io/"):
                 roles.append(lbl.split("/", 1)[1])
         ni = node.status.node_info if node.status and node.status.node_info else None
@@ -1009,7 +1005,10 @@ def apply_resource(api_client: Any, manifest_yaml: str) -> bool:
     except ApiException as exc:
         if exc.status != 409:
             logger.exception(
-                "Failed to create %s/%s in %s", kind, name, namespace,
+                "Failed to create %s/%s in %s",
+                kind,
+                name,
+                namespace,
             )
             return False
 

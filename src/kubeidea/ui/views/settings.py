@@ -72,7 +72,9 @@ class SettingsView(ft.Column):
         self.controls = [
             ft.Container(
                 content=ft.Text(
-                    "Settings", size=24, weight=ft.FontWeight.BOLD,
+                    "Settings",
+                    size=24,
+                    weight=ft.FontWeight.BOLD,
                 ),
                 padding=ft.Padding.only(left=30, right=30, top=20),
             ),
@@ -106,8 +108,7 @@ class SettingsView(ft.Column):
                             ft.Icons.CLOUD,
                             [
                                 ft.Text(
-                                    "Path to the kubeconfig file used for "
-                                    "cluster connections.",
+                                    "Path to the kubeconfig file used for " "cluster connections.",
                                     size=12,
                                     color=ft.Colors.GREY_500,
                                 ),
@@ -184,7 +185,9 @@ class SettingsView(ft.Column):
 
     @staticmethod
     def _section(
-        title: str, icon: str, children: list[ft.Control],
+        title: str,
+        icon: str,
+        children: list[ft.Control],
     ) -> ft.Container:
         """Build a settings section card."""
         return ft.Container(

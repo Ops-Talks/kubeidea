@@ -60,7 +60,8 @@ class TestSettingsView:
         assert view._kubeconfig_field.value == "/custom/kubeconfig"
 
     def test_theme_toggle_applies_immediately(
-        self, mock_page: MagicMock,
+        self,
+        mock_page: MagicMock,
     ) -> None:
         """Toggling theme should call apply_theme immediately."""
         with patch.object(AppSettings, "load", return_value=AppSettings()):
@@ -86,7 +87,8 @@ class TestSettingsView:
         assert view._has_unsaved_changes is True
 
     def test_kubeconfig_change_marks_dirty(
-        self, mock_page: MagicMock,
+        self,
+        mock_page: MagicMock,
     ) -> None:
         """Changing kubeconfig path should mark settings as dirty."""
         with patch.object(AppSettings, "load", return_value=AppSettings()):
@@ -99,7 +101,8 @@ class TestSettingsView:
         assert view._has_unsaved_changes is True
 
     def test_telemetry_toggle_marks_dirty(
-        self, mock_page: MagicMock,
+        self,
+        mock_page: MagicMock,
     ) -> None:
         """Toggling telemetry should mark settings as dirty."""
         with patch.object(AppSettings, "load", return_value=AppSettings()):
@@ -131,7 +134,9 @@ class TestSettingsView:
             view = SettingsView(mock_page)
 
         with patch.object(
-            AppSettings, "save", side_effect=OSError("disk full"),
+            AppSettings,
+            "save",
+            side_effect=OSError("disk full"),
         ):
             view._on_save(None)
 
@@ -159,7 +164,9 @@ class TestSettingsView:
         assert view._has_unsaved_changes is True
 
     def test_save_round_trip(
-        self, mock_page: MagicMock, settings_dir: Path,
+        self,
+        mock_page: MagicMock,
+        settings_dir: Path,
     ) -> None:
         """Settings should survive save → load round-trip."""
         with patch.object(AppSettings, "load", return_value=AppSettings()):

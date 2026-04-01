@@ -111,21 +111,53 @@ DISPLAY_PLURALS: dict[str, str] = {
 
 # ── Category definitions (label, icon, resource kinds) ───────────
 CATEGORIES: list[tuple[str, str, list[str]]] = [
-    ("Workloads", ft.Icons.WIDGETS, [
-        "Pod", "Deployment", "StatefulSet", "DaemonSet", "Job", "CronJob",
-    ]),
-    ("Networking", ft.Icons.LANGUAGE, [
-        "Service", "Ingress", "NetworkPolicy",
-    ]),
-    ("Config", ft.Icons.SETTINGS, [
-        "ConfigMap", "Secret", "ServiceAccount",
-    ]),
-    ("Storage", ft.Icons.STORAGE, [
-        "PersistentVolume", "PersistentVolumeClaim",
-    ]),
-    ("Cluster", ft.Icons.CLOUD, [
-        "Node", "HorizontalPodAutoscaler", "Event",
-    ]),
+    (
+        "Workloads",
+        ft.Icons.WIDGETS,
+        [
+            "Pod",
+            "Deployment",
+            "StatefulSet",
+            "DaemonSet",
+            "Job",
+            "CronJob",
+        ],
+    ),
+    (
+        "Networking",
+        ft.Icons.LANGUAGE,
+        [
+            "Service",
+            "Ingress",
+            "NetworkPolicy",
+        ],
+    ),
+    (
+        "Config",
+        ft.Icons.SETTINGS,
+        [
+            "ConfigMap",
+            "Secret",
+            "ServiceAccount",
+        ],
+    ),
+    (
+        "Storage",
+        ft.Icons.STORAGE,
+        [
+            "PersistentVolume",
+            "PersistentVolumeClaim",
+        ],
+    ),
+    (
+        "Cluster",
+        ft.Icons.CLOUD,
+        [
+            "Node",
+            "HorizontalPodAutoscaler",
+            "Event",
+        ],
+    ),
 ]
 
 # ── Tiny UI helpers ──────────────────────────────────────────────
@@ -172,7 +204,8 @@ def build_section_header(kind: str, count: int) -> ft.Container:
             controls=[
                 ft.Icon(icon, size=16, color=ft.Colors.BLUE_200),
                 ft.Text(
-                    plural, size=12,
+                    plural,
+                    size=12,
                     weight=ft.FontWeight.BOLD,
                     color=ft.Colors.GREY_300,
                 ),
@@ -207,166 +240,214 @@ def build_resource_row(
 
 def _pod_row(pod: PodInfo, on_click: Any) -> ft.Container:
     color = STATUS_COLORS.get(pod.status, ft.Colors.GREY_500)
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
-        ft.Text(pod.name, size=12, expand=True),
-        _dim(pod.ready),
-        _dim(f"↻{pod.restarts}"),
-        _dim(pod.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
+            ft.Text(pod.name, size=12, expand=True),
+            _dim(pod.ready),
+            _dim(f"↻{pod.restarts}"),
+            _dim(pod.age),
+        ],
+        on_click,
+    )
 
 
 def _deployment_row(dep: DeploymentInfo, on_click: Any) -> ft.Container:
     ready = f"{dep.ready_replicas}/{dep.replicas}"
-    return _row_box([
-        ft.Icon(ft.Icons.LAYERS, size=14, color=ft.Colors.BLUE_200),
-        ft.Text(dep.name, size=12, expand=True),
-        _dim(ready),
-        _dim(dep.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.LAYERS, size=14, color=ft.Colors.BLUE_200),
+            ft.Text(dep.name, size=12, expand=True),
+            _dim(ready),
+            _dim(dep.age),
+        ],
+        on_click,
+    )
 
 
 def _statefulset_row(ss: StatefulSetInfo, on_click: Any) -> ft.Container:
     ready = f"{ss.ready_replicas}/{ss.replicas}"
-    return _row_box([
-        ft.Icon(ft.Icons.VIEW_COLUMN, size=14, color=ft.Colors.PURPLE_200),
-        ft.Text(ss.name, size=12, expand=True),
-        _dim(ready),
-        _dim(ss.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.VIEW_COLUMN, size=14, color=ft.Colors.PURPLE_200),
+            ft.Text(ss.name, size=12, expand=True),
+            _dim(ready),
+            _dim(ss.age),
+        ],
+        on_click,
+    )
 
 
 def _daemonset_row(ds: DaemonSetInfo, on_click: Any) -> ft.Container:
     ready = f"{ds.ready}/{ds.desired}"
-    return _row_box([
-        ft.Icon(ft.Icons.DEVICE_HUB, size=14, color=ft.Colors.TEAL_200),
-        ft.Text(ds.name, size=12, expand=True),
-        _dim(ready),
-        _dim(ds.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.DEVICE_HUB, size=14, color=ft.Colors.TEAL_200),
+            ft.Text(ds.name, size=12, expand=True),
+            _dim(ready),
+            _dim(ds.age),
+        ],
+        on_click,
+    )
 
 
 def _job_row(job: JobInfo, on_click: Any) -> ft.Container:
     color = STATUS_COLORS.get(job.status, ft.Colors.GREY_500)
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
-        ft.Text(job.name, size=12, expand=True),
-        _dim(job.completions),
-        _dim(job.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
+            ft.Text(job.name, size=12, expand=True),
+            _dim(job.completions),
+            _dim(job.age),
+        ],
+        on_click,
+    )
 
 
 def _cronjob_row(cj: CronJobInfo, on_click: Any) -> ft.Container:
-    return _row_box([
-        ft.Icon(ft.Icons.SCHEDULE, size=14, color=ft.Colors.AMBER_200),
-        ft.Text(cj.name, size=12, expand=True),
-        _dim(cj.schedule),
-        _dim(cj.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.SCHEDULE, size=14, color=ft.Colors.AMBER_200),
+            ft.Text(cj.name, size=12, expand=True),
+            _dim(cj.schedule),
+            _dim(cj.age),
+        ],
+        on_click,
+    )
 
 
 def _service_row(svc: ServiceInfo, on_click: Any) -> ft.Container:
     ports_str = ", ".join(svc.ports[:3]) or "—"
-    return _row_box([
-        ft.Icon(ft.Icons.DNS, size=14, color=ft.Colors.TEAL_200),
-        ft.Text(svc.name, size=12, expand=True),
-        _pill(svc.type, ft.Colors.TEAL_200),
-        _dim(ports_str),
-        _dim(svc.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.DNS, size=14, color=ft.Colors.TEAL_200),
+            ft.Text(svc.name, size=12, expand=True),
+            _pill(svc.type, ft.Colors.TEAL_200),
+            _dim(ports_str),
+            _dim(svc.age),
+        ],
+        on_click,
+    )
 
 
 def _ingress_row(ing: IngressInfo, on_click: Any) -> ft.Container:
     hosts = ", ".join(ing.hosts[:2]) or "—"
-    return _row_box([
-        ft.Icon(ft.Icons.LANGUAGE, size=14, color=ft.Colors.CYAN_200),
-        ft.Text(ing.name, size=12, expand=True),
-        _dim(hosts),
-        _dim(ing.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.LANGUAGE, size=14, color=ft.Colors.CYAN_200),
+            ft.Text(ing.name, size=12, expand=True),
+            _dim(hosts),
+            _dim(ing.age),
+        ],
+        on_click,
+    )
 
 
 def _netpol_row(np_res: NetworkPolicyInfo, on_click: Any) -> ft.Container:
     types = ", ".join(np_res.policy_types) or "—"
-    return _row_box([
-        ft.Icon(ft.Icons.SHIELD, size=14, color=ft.Colors.ORANGE_200),
-        ft.Text(np_res.name, size=12, expand=True),
-        _dim(types),
-        _dim(np_res.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.SHIELD, size=14, color=ft.Colors.ORANGE_200),
+            ft.Text(np_res.name, size=12, expand=True),
+            _dim(types),
+            _dim(np_res.age),
+        ],
+        on_click,
+    )
 
 
 def _configmap_row(cm: ConfigMapInfo, on_click: Any) -> ft.Container:
-    return _row_box([
-        ft.Icon(ft.Icons.DESCRIPTION, size=14, color=ft.Colors.LIGHT_BLUE_200),
-        ft.Text(cm.name, size=12, expand=True),
-        _dim(f"{len(cm.data_keys)} keys"),
-        _dim(cm.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.DESCRIPTION, size=14, color=ft.Colors.LIGHT_BLUE_200),
+            ft.Text(cm.name, size=12, expand=True),
+            _dim(f"{len(cm.data_keys)} keys"),
+            _dim(cm.age),
+        ],
+        on_click,
+    )
 
 
 def _secret_row(sec: SecretInfo, on_click: Any) -> ft.Container:
-    return _row_box([
-        ft.Icon(ft.Icons.LOCK, size=14, color=ft.Colors.RED_200),
-        ft.Text(sec.name, size=12, expand=True),
-        _pill(sec.type, ft.Colors.RED_200),
-        _dim(f"{len(sec.data_keys)} keys"),
-        _dim(sec.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.LOCK, size=14, color=ft.Colors.RED_200),
+            ft.Text(sec.name, size=12, expand=True),
+            _pill(sec.type, ft.Colors.RED_200),
+            _dim(f"{len(sec.data_keys)} keys"),
+            _dim(sec.age),
+        ],
+        on_click,
+    )
 
 
 def _serviceaccount_row(sa: ServiceAccountInfo, on_click: Any) -> ft.Container:
-    return _row_box([
-        ft.Icon(ft.Icons.PERSON, size=14, color=ft.Colors.INDIGO_200),
-        ft.Text(sa.name, size=12, expand=True),
-        _dim(f"{sa.secrets} secrets"),
-        _dim(sa.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.PERSON, size=14, color=ft.Colors.INDIGO_200),
+            ft.Text(sa.name, size=12, expand=True),
+            _dim(f"{sa.secrets} secrets"),
+            _dim(sa.age),
+        ],
+        on_click,
+    )
 
 
 def _pv_row(pv: PersistentVolumeInfo, on_click: Any) -> ft.Container:
     color = STATUS_COLORS.get(pv.status, ft.Colors.GREY_500)
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
-        ft.Text(pv.name, size=12, expand=True),
-        _dim(pv.capacity),
-        _pill(pv.status, color),
-        _dim(pv.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
+            ft.Text(pv.name, size=12, expand=True),
+            _dim(pv.capacity),
+            _pill(pv.status, color),
+            _dim(pv.age),
+        ],
+        on_click,
+    )
 
 
 def _pvc_row(pvc: PersistentVolumeClaimInfo, on_click: Any) -> ft.Container:
     color = STATUS_COLORS.get(pvc.status, ft.Colors.GREY_500)
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
-        ft.Text(pvc.name, size=12, expand=True),
-        _dim(pvc.capacity or "—"),
-        _pill(pvc.status, color),
-        _dim(pvc.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
+            ft.Text(pvc.name, size=12, expand=True),
+            _dim(pvc.capacity or "—"),
+            _pill(pvc.status, color),
+            _dim(pvc.age),
+        ],
+        on_click,
+    )
 
 
 def _node_row(node: NodeInfo, on_click: Any) -> ft.Container:
     color = STATUS_COLORS.get(node.status, ft.Colors.GREY_500)
     roles = ", ".join(node.roles) or "—"
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
-        ft.Text(node.name, size=12, expand=True),
-        _dim(roles),
-        _dim(node.version),
-        _dim(node.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
+            ft.Text(node.name, size=12, expand=True),
+            _dim(roles),
+            _dim(node.version),
+            _dim(node.age),
+        ],
+        on_click,
+    )
 
 
 def _hpa_row(hpa: HPAInfo, on_click: Any) -> ft.Container:
     replicas = f"{hpa.current_replicas}/{hpa.min_replicas}-{hpa.max_replicas}"
-    return _row_box([
-        ft.Icon(ft.Icons.AUTO_GRAPH, size=14, color=ft.Colors.GREEN_200),
-        ft.Text(hpa.name, size=12, expand=True),
-        _dim(hpa.target),
-        _dim(replicas),
-        _dim(hpa.age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.AUTO_GRAPH, size=14, color=ft.Colors.GREEN_200),
+            ft.Text(hpa.name, size=12, expand=True),
+            _dim(hpa.target),
+            _dim(replicas),
+            _dim(hpa.age),
+        ],
+        on_click,
+    )
 
 
 def _event_row(ev: EventInfo, on_click: Any) -> ft.Container:
@@ -379,8 +460,10 @@ def _event_row(ev: EventInfo, on_click: Any) -> ft.Container:
                 ft.Icon(ft.Icons.CIRCLE, size=10, color=color),
                 ft.Text(ev.reason, size=12, width=100),
                 ft.Text(
-                    msg, size=11,
-                    color=ft.Colors.GREY_400, expand=True,
+                    msg,
+                    size=11,
+                    color=ft.Colors.GREY_400,
+                    expand=True,
                 ),
                 _dim(ev.last_seen),
             ],
@@ -396,11 +479,14 @@ def _event_row(ev: EventInfo, on_click: Any) -> ft.Container:
 def _generic_row(resource: Any, on_click: Any) -> ft.Container:
     name = getattr(resource, "name", str(resource))
     age = getattr(resource, "age", "")
-    return _row_box([
-        ft.Icon(ft.Icons.CIRCLE, size=10, color=ft.Colors.GREY_500),
-        ft.Text(name, size=12, expand=True),
-        _dim(age),
-    ], on_click)
+    return _row_box(
+        [
+            ft.Icon(ft.Icons.CIRCLE, size=10, color=ft.Colors.GREY_500),
+            ft.Text(name, size=12, expand=True),
+            _dim(age),
+        ],
+        on_click,
+    )
 
 
 # ── Builder dispatch table ───────────────────────────────────────

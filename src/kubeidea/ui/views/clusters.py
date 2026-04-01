@@ -84,9 +84,7 @@ class ClustersView(ft.Column):
         self._context_list.controls.clear()
 
         if not self._contexts:
-            self._status_text.value = (
-                f"No contexts found in {self._manager.kubeconfig_path}"
-            )
+            self._status_text.value = f"No contexts found in {self._manager.kubeconfig_path}"
             self._status_text.color = ft.Colors.ORANGE_400
             self._context_list.controls.append(
                 ft.Container(
@@ -205,7 +203,8 @@ class ClustersView(ft.Column):
     async def _connect(self, ctx: KubeContext) -> None:
         try:
             api_client = await asyncio.to_thread(
-                self._manager.load_context, ctx.name,
+                self._manager.load_context,
+                ctx.name,
             )
             from kubeidea.kube.resources import list_namespaces
 

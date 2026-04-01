@@ -29,7 +29,14 @@ async def main(page: ft.Page) -> None:
     async def _on_cluster_connected() -> None:
         await explorer_view.refresh()
 
-    clusters_view = ClustersView(page, app_ctx, on_connected=_on_cluster_connected)
+    async def _on_cluster_disconnected() -> None:
+        await explorer_view.refresh()
+
+    clusters_view = ClustersView(
+        page, app_ctx,
+        on_connected=_on_cluster_connected,
+        on_disconnected=_on_cluster_disconnected,
+    )
 
     views: list[ft.Control] = [
         HomeView(page),

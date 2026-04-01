@@ -11,8 +11,8 @@ import flet as ft
 from kubeidea.core.context import AppContext
 from kubeidea.kube.client import KubeConfigManager, KubeContext
 
-# The on_connected callback may be sync or async.
-ConnectedCallback = Callable[[], None] | Callable[[], Awaitable[None]] | None
+# The on_connected / on_disconnected callbacks may be sync or async.
+ConnectionCallback = Callable[[], None] | Callable[[], Awaitable[None]] | None
 
 
 class ClustersView(ft.Column):
@@ -22,12 +22,14 @@ class ClustersView(ft.Column):
         self,
         page: ft.Page,
         ctx: AppContext,
-        on_connected: ConnectedCallback = None,
+        on_connected: ConnectionCallback = None,
+        on_disconnected: ConnectionCallback = None,
     ) -> None:
         super().__init__(expand=True, spacing=10)
         self._page = page
         self._ctx = ctx
         self._on_connected = on_connected
+        self._on_disconnected = on_disconnected
         self._manager = KubeConfigManager()
         self._contexts: list[KubeContext] = []
 
@@ -124,6 +126,27 @@ class ClustersView(ft.Column):
         def on_connect(_e: Any, context: KubeContext = ctx) -> None:
             self._page.run_task(self._connect, context)
 
+        def on_disconnect(_e: Any) -> None:
+            self._page.run_task(self._disconnect)
+
+        action_btn = (
+            ft.Button(
+                content=ft.Text("Disconnect"),
+                icon=ft.Icons.POWER_OFF,
+                on_click=on_disconnect,
+                style=ft.ButtonStyle(
+                    color=ft.Colors.RED_300,
+                    icon_color=ft.Colors.RED_300,
+                ),
+            )
+            if is_active
+            else ft.Button(
+                content=ft.Text("Connect"),
+                icon=ft.Icons.POWER,
+                on_click=on_connect,
+            )
+        )
+
         return ft.Container(
             content=ft.Row(
                 controls=[
@@ -143,12 +166,7 @@ class ClustersView(ft.Column):
                         spacing=2,
                         expand=True,
                     ),
-                    ft.Button(
-                        content=ft.Text("Connected" if is_active else "Connect"),
-                        icon=ft.Icons.POWER if not is_active else ft.Icons.POWER_OFF,
-                        on_click=on_connect,
-                        disabled=is_active,
-                    ),
+                    action_btn,
                 ],
                 vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
@@ -244,6 +262,34 @@ class ClustersView(ft.Column):
                 spacing=8,
             )
             self._page.update()
+
+    async def _disconnect(self) -> None:
+        """Disconnect from the active cluster."""
+        ctx_name = self._ctx.current_context or "cluster"
+        self._ctx.disconnect()
+
+        self._detail.content = ft.Column(
+            controls=[
+                ft.Row(
+                    controls=[
+                        ft.Icon(ft.Icons.CLOUD_OFF, color=ft.Colors.GREY_500, size=18),
+                        ft.Text("Disconnected", size=13, color=ft.Colors.GREY_500),
+                    ],
+                    spacing=6,
+                ),
+                ft.Text(
+                    f"Disconnected from {ctx_name}",
+                    size=12,
+                    color=ft.Colors.GREY_500,
+                ),
+            ],
+            spacing=8,
+        )
+        self._load_contexts()
+        if self._on_disconnected:
+            result = self._on_disconnected()
+            if asyncio.iscoroutine(result):
+                await result
 
     def _on_refresh(self, _e: Any) -> None:
         self._load_contexts()

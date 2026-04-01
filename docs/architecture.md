@@ -36,12 +36,16 @@ kube-idea/
 │   │   ├── theme.py
 │   │   ├── navigation.py
 │   │   └── views/
-│   │       └── home.py
+│   │       ├── home.py
+│   │       ├── explorer.py   # Resource browser (17 types, CRUD, detail panel)
+│   │       ├── clusters.py   # Cluster connection management
+│   │       └── placeholder.py
 │   ├── core/               # Application services, use cases
 │   │   └── context.py
 │   ├── kube/               # API clients, watchers, port-forward, exec
 │   │   ├── client.py
-│   │   └── resources.py
+│   │   ├── resources.py    # 22 functions: list_*, get, delete, scale, restart
+│   │   └── models.py       # 18 Pydantic models (PodInfo, DeploymentInfo, …)
 │   ├── metrics/            # metrics-server / Prometheus adapters
 │   │   ├── server.py
 │   │   └── prometheus.py
@@ -54,7 +58,10 @@ kube-idea/
 │   └── utils/              # Logging, telemetry (opt-in), cache
 │       └── logging.py
 ├── plugins/                # First-party sample plugins
-├── tests/                  # pytest test suite
+├── tests/                  # pytest test suite (138 tests)
+│   ├── test_context.py
+│   ├── test_resources.py   # 122 tests for models + resources
+│   └── test_settings.py
 └── README.md
 ```
 

@@ -11,18 +11,28 @@ renders a modern UI via **Flet** (Flutter).
 
 ---
 
-## Features (MVP scope)
+## Implemented features
 
-| Feature              | Description                                                                    |
-| -------------------- | ------------------------------------------------------------------------------ |
-| **Cluster explorer** | List Namespaces, Pods, Deployments, Services, Nodes; view details, events, YAML |
-| **Logs**             | Streaming logs with label/container filters; search; JSON/TXT export           |
-| **Exec**             | Remote shell (TTY/resize) in containers                                        |
-| **Port-forward**     | Service/Pod port-forwarding; active tunnel manager                             |
-| **Metrics**          | CPU/Memory from metrics-server; optional Prometheus connector                  |
-| **RBAC Inspector**   | Who-can-what analysis; SelfSubjectAccessReview simulation                      |
-| **YAML Editor**      | Schema validation (cluster OpenAPI); diffs vs. live                            |
-| **Plugins**          | Python entry-point based plugin system with host API                           |
+| Feature | Status | Description |
+|---|---|---|
+| **Cluster connection** | ✅ Done | Multi-context kubeconfig management with namespace selection |
+| **Resource Explorer** | ✅ Done | Browse 17 resource types across 5 categories; detail panel with Info, Events, and YAML tabs |
+| **CRUD operations** | ✅ Done | Delete, Scale (Deployments/StatefulSets), Restart (rolling restart via annotation patch) |
+| **Search / filter** | ✅ Done | Instant name filter across all resource types in the active category |
+
+## Planned features
+
+| Feature | Description |
+|---|---|
+| **Logs** | Streaming logs with container filters; search; JSON/TXT export |
+| **Exec** | Remote shell (TTY/resize) in containers |
+| **Port-forward** | Service/Pod port-forwarding; active tunnel manager |
+| **Metrics** | CPU/Memory from metrics-server; optional Prometheus connector |
+| **RBAC Inspector** | Who-can-what analysis; SelfSubjectAccessReview simulation |
+| **YAML Editor** | Schema validation (cluster OpenAPI); diffs vs. live |
+| **Plugins** | Python entry-point based plugin system with host API |
+
+See the [Roadmap](roadmap.md) for the full implementation plan.
 
 ---
 

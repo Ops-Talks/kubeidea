@@ -31,6 +31,8 @@ See [docs/architecture.md](docs/architecture.md) for component boundaries.
 - Views extend `ft.Column` or `ft.Container`; receive `page: ft.Page` in `__init__`.
 - Navigation index → view mapping lives in `app.py`; do not embed routing logic inside views.
 - `ft.Icon` takes the icon **as the first positional argument**, not `name=`.
+- `ft.Dropdown` uses `on_select=`, **not** `on_change=`. Read the selected value via `dropdown.value`. Options use `ft.DropdownOption(key=, text=)`.
+- `ft.Tabs` uses the 3-part architecture: `ft.Tabs(length=N, content=ft.Column([ft.TabBar(tabs=[...]), ft.TabBarView(controls=[...])]))`. `ft.Tab` uses `label=`, **not** `text=`, and has **no** `content=` parameter.
 - All Kubernetes calls go through `kube/client.py` — never import `kubernetes` directly in UI code.
 - Secrets are never stored to disk; use the OS keyring (`keyring` lib) where persistence is required.
 - Telemetry is opt-in only; never collect data unless the user has explicitly enabled it in settings.

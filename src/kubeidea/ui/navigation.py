@@ -30,6 +30,7 @@ def build_navigation(page: ft.Page, on_change: Callable[[int], None]) -> ft.Navi
         destinations=[
             ft.NavigationRailDestination(icon=ft.Icons.HOME, label="Home"),
             ft.NavigationRailDestination(icon=ft.Icons.CLOUD, label="Clusters"),
+            ft.NavigationRailDestination(icon=ft.Icons.EXPLORE, label="Explorer"),
             ft.NavigationRailDestination(icon=ft.Icons.TERMINAL, label="Logs"),
             ft.NavigationRailDestination(icon=ft.Icons.MONITOR_HEART, label="Metrics"),
             ft.NavigationRailDestination(icon=ft.Icons.CODE, label="YAML"),

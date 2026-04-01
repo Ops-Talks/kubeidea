@@ -50,11 +50,14 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
+  - User Guide:
+      - Resource Explorer: explorer.md
   - Architecture: architecture.md
   - Development: development.md
   - Plugins: plugins.md
   - Security: security.md
   - Contributing: contributing.md
+  - Roadmap: roadmap.md
 
 extra_css:
   - stylesheets/extra.css

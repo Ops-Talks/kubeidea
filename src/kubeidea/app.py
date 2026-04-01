@@ -13,7 +13,7 @@ from kubeidea.ui.views.placeholder import PlaceholderView
 from kubeidea.ui.views.settings import SettingsView
 
 
-def main(page: ft.Page) -> None:
+async def main(page: ft.Page) -> None:
     """Bootstrap the Kube-IDEA desktop application."""
     page.title = "Kube-IDEA"
     page.window.width = 1200
@@ -26,8 +26,8 @@ def main(page: ft.Page) -> None:
 
     explorer_view = ExplorerView(page, app_ctx)
 
-    def _on_cluster_connected() -> None:
-        explorer_view.refresh()
+    async def _on_cluster_connected() -> None:
+        await explorer_view.refresh()
 
     clusters_view = ClustersView(page, app_ctx, on_connected=_on_cluster_connected)
 
@@ -45,12 +45,12 @@ def main(page: ft.Page) -> None:
 
     content_area = ft.Column(controls=[views[0]], expand=True)
 
-    def on_nav_change(index: int) -> None:
+    async def on_nav_change(index: int) -> None:
         content_area.controls.clear()
         content_area.controls.append(views[index])
         # auto-refresh explorer when navigating to it
         if isinstance(views[index], ExplorerView):
-            explorer_view.refresh()
+            await explorer_view.refresh()
         page.update()
 
     navigation = build_navigation(page, on_nav_change)

@@ -17,8 +17,6 @@ dependencies = [
     "pydantic>=2.6,<3",
     # HTTP client for custom adapters (e.g., Prometheus)
     "httpx>=0.27.0,<1",
-    # TUI/CLI helpers for optional headless tools
-    "typer[all]>=0.12.0,<1",
 ]
 
 [project.entry-points."kubeidea.plugins"]

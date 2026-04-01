@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 import flet as ft
@@ -73,7 +74,7 @@ class DetailPanel(ft.Column):
         page: ft.Page,
         ctx: AppContext,
         on_close: Callable[[], None],
-        on_resource_deleted: Callable[[], None],
+        on_resource_deleted: Callable[[], None] | Callable[[], Awaitable[None]],
     ) -> None:
         super().__init__(expand=True)
         self._page = page
@@ -300,14 +301,14 @@ class DetailPanel(ft.Column):
 
     # ── Lazy tab loading ──────────────────────────────────────────
 
-    def _on_tab_change(self, _e: Any) -> None:
+    async def _on_tab_change(self, _e: Any) -> None:
         if self._detail_tabs is None:
             return
         idx = self._detail_tabs.selected_index
         if idx == 1 and not self._events_loaded:
-            self._load_events()
+            await self._load_events()
         elif idx == 2 and not self._yaml_loaded:
-            self._load_yaml()
+            await self._load_yaml()
 
     # ── Info tab ──────────────────────────────────────────────────
 
@@ -332,7 +333,7 @@ class DetailPanel(ft.Column):
 
     # ── Events tab ────────────────────────────────────────────────
 
-    def _load_events(self) -> None:
+    async def _load_events(self) -> None:
         self._events_loaded = True
         self._events_view.controls.clear()
         client = self._ctx.api_client
@@ -354,8 +355,8 @@ class DetailPanel(ft.Column):
             return
         try:
             ns = getattr(self._resource, "namespace", "default")
-            events = list_events(
-                client, ns, involved_object_name=res_name,
+            events = await asyncio.to_thread(
+                list_events, client, ns, involved_object_name=res_name,
             )
             if not events:
                 self._events_view.controls.append(
@@ -413,7 +414,7 @@ class DetailPanel(ft.Column):
 
     # ── YAML tab ──────────────────────────────────────────────────
 
-    def _load_yaml(self) -> None:
+    async def _load_yaml(self) -> None:
         self._yaml_loaded = True
         self._yaml_view.controls.clear()
         client = self._ctx.api_client
@@ -431,8 +432,8 @@ class DetailPanel(ft.Column):
             return
         try:
             ns = getattr(self._resource, "namespace", "default")
-            self._yaml_text = get_resource_yaml(
-                client, api_kind, res_name, ns,
+            self._yaml_text = await asyncio.to_thread(
+                get_resource_yaml, client, api_kind, res_name, ns,
             )
             self._yaml_view.controls.append(
                 ft.Row(
@@ -475,13 +476,15 @@ class DetailPanel(ft.Column):
         api_kind = API_KINDS.get(self._kind, self._kind.lower())
         res_name = getattr(res, "name", "?")
 
-        def confirm(_e: Any) -> None:
+        async def confirm(_e: Any) -> None:
             self._page.close(dlg)
             client = self._ctx.api_client
             if not client:
                 return
             ns = getattr(res, "namespace", "default")
-            ok = delete_resource(client, api_kind, res_name, ns)
+            ok = await asyncio.to_thread(
+                delete_resource, client, api_kind, res_name, ns,
+            )
             if ok:
                 self._page.open(
                     ft.SnackBar(
@@ -489,7 +492,9 @@ class DetailPanel(ft.Column):
                     ),
                 )
                 self.hide()
-                self._on_resource_deleted()
+                result = self._on_resource_deleted()
+                if asyncio.iscoroutine(result):
+                    await result
             else:
                 self._page.open(
                     ft.SnackBar(
@@ -528,7 +533,7 @@ class DetailPanel(ft.Column):
             width=120,
         )
 
-        def confirm(_e: Any) -> None:
+        async def confirm(_e: Any) -> None:
             self._page.close(dlg)
             client = self._ctx.api_client
             if not client:
@@ -541,7 +546,9 @@ class DetailPanel(ft.Column):
                 )
                 return
             ns = getattr(res, "namespace", "default")
-            ok = scale_resource(client, api_kind, res.name, ns, count)
+            ok = await asyncio.to_thread(
+                scale_resource, client, api_kind, res.name, ns, count,
+            )
             if ok:
                 self._page.open(
                     ft.SnackBar(
@@ -550,7 +557,9 @@ class DetailPanel(ft.Column):
                         ),
                     ),
                 )
-                self._on_resource_deleted()  # triggers list refresh
+                result = self._on_resource_deleted()  # triggers list refresh
+                if asyncio.iscoroutine(result):
+                    await result
             else:
                 self._page.open(
                     ft.SnackBar(
@@ -586,13 +595,15 @@ class DetailPanel(ft.Column):
         res = self._resource
         api_kind = API_KINDS.get(self._kind, self._kind.lower())
 
-        def confirm(_e: Any) -> None:
+        async def confirm(_e: Any) -> None:
             self._page.close(dlg)
             client = self._ctx.api_client
             if not client:
                 return
             ns = getattr(res, "namespace", "default")
-            ok = restart_resource(client, api_kind, res.name, ns)
+            ok = await asyncio.to_thread(
+                restart_resource, client, api_kind, res.name, ns,
+            )
             if ok:
                 self._page.open(
                     ft.SnackBar(

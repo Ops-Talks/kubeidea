@@ -2,25 +2,32 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import asyncio
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 import flet as ft
 
+# The on_change callback may be sync or async.
+NavCallback = Callable[[int], None] | Callable[[int], Awaitable[None]]
 
-def build_navigation(page: ft.Page, on_change: Callable[[int], None]) -> ft.NavigationRail:
+
+def build_navigation(page: ft.Page, on_change: NavCallback) -> ft.NavigationRail:
     """Build the main navigation rail.
 
     Args:
         page: The Flet page instance.
         on_change: Callback invoked with the selected destination index.
+            May be a regular function or a coroutine function.
 
     Returns:
         A configured NavigationRail control.
     """
 
-    def _on_destination_change(e: Any) -> None:
-        on_change(e.control.selected_index)
+    async def _on_destination_change(e: Any) -> None:
+        result = on_change(e.control.selected_index)
+        if asyncio.iscoroutine(result):
+            await result
 
     rail = ft.NavigationRail(
         selected_index=0,

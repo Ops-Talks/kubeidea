@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import asyncio
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 import flet as ft
 
 from kubeidea.core.context import AppContext
 from kubeidea.kube.client import KubeConfigManager, KubeContext
+
+# The on_connected callback may be sync or async.
+ConnectedCallback = Callable[[], None] | Callable[[], Awaitable[None]] | None
 
 
 class ClustersView(ft.Column):
@@ -18,7 +22,7 @@ class ClustersView(ft.Column):
         self,
         page: ft.Page,
         ctx: AppContext,
-        on_connected: Callable[[], None] | None = None,
+        on_connected: ConnectedCallback = None,
     ) -> None:
         super().__init__(expand=True, spacing=10)
         self._page = page
@@ -118,7 +122,7 @@ class ClustersView(ft.Column):
             self._show_detail(context)
 
         def on_connect(_e: Any, context: KubeContext = ctx) -> None:
-            self._connect(context)
+            self._page.run_task(self._connect, context)
 
         return ft.Container(
             content=ft.Row(
@@ -180,12 +184,14 @@ class ClustersView(ft.Column):
             ]
         )
 
-    def _connect(self, ctx: KubeContext) -> None:
+    async def _connect(self, ctx: KubeContext) -> None:
         try:
-            api_client = self._manager.load_context(ctx.name)
+            api_client = await asyncio.to_thread(
+                self._manager.load_context, ctx.name,
+            )
             from kubeidea.kube.resources import list_namespaces
 
-            namespaces = list_namespaces(api_client)
+            namespaces = await asyncio.to_thread(list_namespaces, api_client)
 
             self._ctx.switch_context(ctx.name, api_client, namespaces)
             self._detail.content = ft.Column(
@@ -215,7 +221,9 @@ class ClustersView(ft.Column):
             # refresh tile list to show active indicator
             self._load_contexts()
             if self._on_connected:
-                self._on_connected()
+                result = self._on_connected()
+                if asyncio.iscoroutine(result):
+                    await result
 
         except Exception as exc:
             self._detail.content = ft.Column(

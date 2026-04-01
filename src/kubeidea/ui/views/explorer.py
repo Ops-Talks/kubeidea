@@ -10,6 +10,7 @@ Body    : ft.Row
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
@@ -274,7 +275,7 @@ class ExplorerView(ft.Column):
 
     # ── public API (called by app.py) ─────────────────────────────
 
-    def refresh(self) -> None:
+    async def refresh(self) -> None:
         """Reload namespace list and all resources."""
         if not self._ctx.connected:
             self._show_not_connected()
@@ -295,7 +296,7 @@ class ExplorerView(ft.Column):
         ]
         self._ns_dropdown.value = self._ctx.current_namespace
 
-        self._load_all_resources()
+        await asyncio.to_thread(self._load_all_resources)
         self._render_all_categories()
         self._page.update()
 
@@ -438,16 +439,16 @@ class ExplorerView(ft.Column):
 
     # ── callbacks ─────────────────────────────────────────────────
 
-    def _on_namespace_change(self, _e: Any) -> None:
+    async def _on_namespace_change(self, _e: Any) -> None:
         if self._ns_dropdown.value:
             self._ctx.switch_namespace(self._ns_dropdown.value)
-            self._load_all_resources()
+            await asyncio.to_thread(self._load_all_resources)
             self._render_all_categories()
             self._detail_panel.hide()
             self._page.update()
 
-    def _on_refresh(self, _e: Any) -> None:
-        self.refresh()
+    async def _on_refresh(self, _e: Any) -> None:
+        await self.refresh()
 
     def _on_tab_change(self, _e: Any) -> None:
         pass  # TabBarView handles visibility automatically
@@ -497,8 +498,8 @@ class ExplorerView(ft.Column):
         self._detail_panel.hide()
         self._page.update()
 
-    def _on_resource_mutated(self) -> None:
+    async def _on_resource_mutated(self) -> None:
         """Refresh lists after a delete / scale / restart."""
-        self._load_all_resources()
+        await asyncio.to_thread(self._load_all_resources)
         self._render_all_categories()
         self._page.update()

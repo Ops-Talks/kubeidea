@@ -48,7 +48,7 @@ STATUS_COLORS: dict[str, str] = {
 }
 
 # ── Kind → icon mapping ─────────────────────────────────────────
-KIND_ICONS: dict[str, str] = {
+KIND_ICONS: dict[str, ft.IconData] = {
     "Pod": ft.Icons.WIDGETS,
     "Deployment": ft.Icons.LAYERS,
     "StatefulSet": ft.Icons.VIEW_COLUMN,
@@ -110,7 +110,7 @@ DISPLAY_PLURALS: dict[str, str] = {
 }
 
 # ── Category definitions (label, icon, resource kinds) ───────────
-CATEGORIES: list[tuple[str, str, list[str]]] = [
+CATEGORIES: list[tuple[str, ft.IconData, list[str]]] = [
     (
         "Workloads",
         ft.Icons.WIDGETS,
@@ -232,7 +232,8 @@ def build_resource_row(
         on_click(k, r)
 
     builder = _ROW_BUILDERS.get(kind, _generic_row)
-    return builder(resource, handler)
+    result: ft.Container = builder(resource, handler)
+    return result
 
 
 # ── Per-type row builders ────────────────────────────────────────

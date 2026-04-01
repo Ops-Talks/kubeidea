@@ -264,7 +264,8 @@ class DetailPanel(ft.Column):
             return True
         try:
             ns = getattr(self._resource, "namespace", self._ctx.current_namespace)
-            return inspector.can_i(verb, resource_plural, ns)
+            result: bool = inspector.can_i(verb, resource_plural, ns)
+            return result
         except Exception:
             logger.debug("RBAC check failed for %s %s, allowing", verb, self._kind)
             return True
@@ -493,8 +494,8 @@ class DetailPanel(ft.Column):
 
     def _on_copy_yaml(self, _e: Any) -> None:
         if self._yaml_text:
-            self._page.set_clipboard(self._yaml_text)
-            self._page.open(
+            self._page.clipboard.set(self._yaml_text)
+            self._page.show_dialog(
                 ft.SnackBar(ft.Text("YAML copied to clipboard")),
             )
 
@@ -506,7 +507,7 @@ class DetailPanel(ft.Column):
         res_name = getattr(res, "name", "?")
 
         async def confirm(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
             client = self._ctx.api_client
             if not client:
                 return
@@ -519,7 +520,7 @@ class DetailPanel(ft.Column):
                 ns,
             )
             if ok:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(f"Deleted {self._kind}/{res_name}"),
                     ),
@@ -529,7 +530,7 @@ class DetailPanel(ft.Column):
                 if asyncio.iscoroutine(result):
                     await result
             else:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(
                             f"Failed to delete {self._kind}/{res_name}",
@@ -538,7 +539,7 @@ class DetailPanel(ft.Column):
                 )
 
         def cancel(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
 
         dlg = ft.AlertDialog(
             title=ft.Text("Confirm Delete"),
@@ -550,7 +551,7 @@ class DetailPanel(ft.Column):
                 ft.Button(content=ft.Text("Delete"), on_click=confirm),
             ],
         )
-        self._page.open(dlg)
+        self._page.show_dialog(dlg)
 
     # ── Scale action ──────────────────────────────────────────────
 
@@ -566,14 +567,14 @@ class DetailPanel(ft.Column):
         )
 
         async def confirm(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
             client = self._ctx.api_client
             if not client:
                 return
             try:
                 count = int(replicas_field.value or "0")
             except ValueError:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(ft.Text("Invalid replica count")),
                 )
                 return
@@ -587,7 +588,7 @@ class DetailPanel(ft.Column):
                 count,
             )
             if ok:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(
                             f"Scaled {self._kind}/{res.name} → {count}",
@@ -598,7 +599,7 @@ class DetailPanel(ft.Column):
                 if asyncio.iscoroutine(result):
                     await result
             else:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(
                             f"Failed to scale {self._kind}/{res.name}",
@@ -607,7 +608,7 @@ class DetailPanel(ft.Column):
                 )
 
         def cancel(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
 
         dlg = ft.AlertDialog(
             title=ft.Text(f"Scale {self._kind}"),
@@ -624,7 +625,7 @@ class DetailPanel(ft.Column):
                 ft.Button(content=ft.Text("Scale"), on_click=confirm),
             ],
         )
-        self._page.open(dlg)
+        self._page.show_dialog(dlg)
 
     # ── Restart action ────────────────────────────────────────────
 
@@ -633,7 +634,7 @@ class DetailPanel(ft.Column):
         api_kind = API_KINDS.get(self._kind, self._kind.lower())
 
         async def confirm(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
             client = self._ctx.api_client
             if not client:
                 return
@@ -646,7 +647,7 @@ class DetailPanel(ft.Column):
                 ns,
             )
             if ok:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(
                             f"Restarting {self._kind}/{res.name}",
@@ -654,7 +655,7 @@ class DetailPanel(ft.Column):
                     ),
                 )
             else:
-                self._page.open(
+                self._page.show_dialog(
                     ft.SnackBar(
                         ft.Text(
                             f"Failed to restart {self._kind}/{res.name}",
@@ -663,7 +664,7 @@ class DetailPanel(ft.Column):
                 )
 
         def cancel(_e: Any) -> None:
-            self._page.close(dlg)
+            self._page.pop_dialog()
 
         dlg = ft.AlertDialog(
             title=ft.Text("Confirm Restart"),
@@ -675,7 +676,7 @@ class DetailPanel(ft.Column):
                 ft.Button(content=ft.Text("Restart"), on_click=confirm),
             ],
         )
-        self._page.open(dlg)
+        self._page.show_dialog(dlg)
 
 
 # =====================================================================

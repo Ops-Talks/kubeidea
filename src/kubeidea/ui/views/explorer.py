@@ -188,7 +188,13 @@ class ExplorerView(ft.Column):
         )
 
         # ── one ListView per category tab ─────────────────────────
-        self._category_lists: list[ft.ListView] = [ft.ListView(expand=True, spacing=2, padding=8) for _ in CATEGORIES]
+        self._category_lists: list[ft.ListView] = [
+            ft.ListView(expand=True, spacing=2, padding=8)
+            for _ in CATEGORIES
+        ]
+
+        # Cast for TabBarView which expects list[Control] (list is invariant)
+        _tab_views: list[ft.Control] = [*self._category_lists]
 
         # ── category tabs (Tabs ▸ TabBar + TabBarView) ────────────
         self._tabs = ft.Tabs(
@@ -204,7 +210,7 @@ class ExplorerView(ft.Column):
                     ),
                     ft.TabBarView(
                         expand=True,
-                        controls=self._category_lists,
+                        controls=_tab_views,
                     ),
                 ],
             ),

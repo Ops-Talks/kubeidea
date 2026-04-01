@@ -186,7 +186,7 @@ class SettingsView(ft.Column):
     @staticmethod
     def _section(
         title: str,
-        icon: str,
+        icon: ft.IconData,
         children: list[ft.Control],
     ) -> ft.Container:
         """Build a settings section card."""

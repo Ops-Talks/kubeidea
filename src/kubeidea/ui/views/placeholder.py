@@ -6,7 +6,7 @@ import flet as ft
 class PlaceholderView(ft.Column):
     """Temporary placeholder shown for features under development."""
 
-    def __init__(self, section: str, icon: str) -> None:
+    def __init__(self, section: str, icon: ft.IconData) -> None:
         super().__init__(
             expand=True,
             alignment=ft.MainAxisAlignment.CENTER,

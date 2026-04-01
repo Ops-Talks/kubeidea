@@ -30,6 +30,7 @@ pytest = "^8.0.0"
 pytest-asyncio = "^0.23.0"
 ruff = "^0.4.0"
 mypy = "^1.9.0"
+types-pyyaml = "^6.0.12.20250915"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"

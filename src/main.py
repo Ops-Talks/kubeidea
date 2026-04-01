@@ -4,4 +4,4 @@ import flet as ft
 
 from kubeidea.app import main
 
-ft.app(target=main)
+ft.run(main)

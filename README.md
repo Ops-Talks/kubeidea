@@ -2,6 +2,11 @@
 
 [![CI](https://github.com/Ops-Talks/kubeidea/actions/workflows/ci.yml/badge.svg)](https://github.com/Ops-Talks/kubeidea/actions/workflows/ci.yml)
 [![Docs](https://github.com/Ops-Talks/kubeidea/actions/workflows/docs.yml/badge.svg)](https://ops-talks.github.io/kubeidea/)
+[![Release](https://github.com/Ops-Talks/kubeidea/actions/workflows/release.yml/badge.svg)](https://github.com/Ops-Talks/kubeidea/actions/workflows/release.yml)
+[![Python](https://img.shields.io/badge/python-%3E%3D3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Flet](https://img.shields.io/badge/flet-UI-purple?logo=flutter&logoColor=white)](https://flet.dev)
+[![License](https://img.shields.io/github/license/Ops-Talks/kubeidea)](LICENSE)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 > **Kubernetes desktop IDE built with Python (Flet + Poetry).**
 

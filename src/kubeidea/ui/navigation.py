@@ -2,24 +2,25 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any
 
 import flet as ft
 
 
-def build_navigation(page: ft.Page) -> ft.NavigationRail:
+def build_navigation(page: ft.Page, on_change: Callable[[int], None]) -> ft.NavigationRail:
     """Build the main navigation rail.
 
     Args:
         page: The Flet page instance.
+        on_change: Callback invoked with the selected destination index.
 
     Returns:
         A configured NavigationRail control.
     """
 
     def _on_destination_change(e: Any) -> None:
-        _ = e
-        page.update()
+        on_change(e.control.selected_index)
 
     rail = ft.NavigationRail(
         selected_index=0,

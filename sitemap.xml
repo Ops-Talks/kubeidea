@@ -2,30 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ops-talks.github.io/kubeidea/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/architecture/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/contributing/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/development/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
+    </url>
+    <url>
+         <loc>https://ops-talks.github.io/kubeidea/explorer/</loc>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/getting-started/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/plugins/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
+    </url>
+    <url>
+         <loc>https://ops-talks.github.io/kubeidea/roadmap/</loc>
+         <lastmod>2026-04-01</lastmod>
     </url>
     <url>
          <loc>https://ops-talks.github.io/kubeidea/security/</loc>
-         <lastmod>2026-03-31</lastmod>
+         <lastmod>2026-04-01</lastmod>
     </url>
 </urlset>

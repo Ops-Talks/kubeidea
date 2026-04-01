@@ -264,6 +264,26 @@
   
   
   
+    
+    
+      <li class="md-tabs__item">
+        <a href="explorer/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
     <li class="md-tabs__item">
       <a href="architecture/" class="md-tabs__link">
         
@@ -348,6 +368,25 @@
     
   
   Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="roadmap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
 
       </a>
     </li>
@@ -466,10 +505,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#features-mvp-scope" class="md-nav__link">
+  <a href="#implemented-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features (MVP scope)
+        Implemented features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned features
       
     </span>
   </a>
@@ -518,6 +568,93 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="explorer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resource Explorer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -657,6 +794,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -684,10 +848,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#features-mvp-scope" class="md-nav__link">
+  <a href="#implemented-features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features (MVP scope)
+        Implemented features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned features
       
     </span>
   </a>
@@ -735,7 +910,39 @@ clusters with a focus on <strong>lightweight UX</strong>, <strong>security (DevS
 <p>It is written in <strong>Python</strong>, uses <strong>Poetry</strong> for dependency management, and
 renders a modern UI via <strong>Flet</strong> (Flutter).</p>
 <hr />
-<h2 id="features-mvp-scope">Features (MVP scope)<a class="headerlink" href="#features-mvp-scope" title="Permanent link">&para;</a></h2>
+<h2 id="implemented-features">Implemented features<a class="headerlink" href="#implemented-features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cluster connection</strong></td>
+<td>✅ Done</td>
+<td>Multi-context kubeconfig management with namespace selection</td>
+</tr>
+<tr>
+<td><strong>Resource Explorer</strong></td>
+<td>✅ Done</td>
+<td>Browse 17 resource types across 5 categories; detail panel with Info, Events, and YAML tabs</td>
+</tr>
+<tr>
+<td><strong>CRUD operations</strong></td>
+<td>✅ Done</td>
+<td>Delete, Scale (Deployments/StatefulSets), Restart (rolling restart via annotation patch)</td>
+</tr>
+<tr>
+<td><strong>Search / filter</strong></td>
+<td>✅ Done</td>
+<td>Instant name filter across all resource types in the active category</td>
+</tr>
+</tbody>
+</table>
+<h2 id="planned-features">Planned features<a class="headerlink" href="#planned-features" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -745,12 +952,8 @@ renders a modern UI via <strong>Flet</strong> (Flutter).</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Cluster explorer</strong></td>
-<td>List Namespaces, Pods, Deployments, Services, Nodes; view details, events, YAML</td>
-</tr>
-<tr>
 <td><strong>Logs</strong></td>
-<td>Streaming logs with label/container filters; search; JSON/TXT export</td>
+<td>Streaming logs with container filters; search; JSON/TXT export</td>
 </tr>
 <tr>
 <td><strong>Exec</strong></td>
@@ -778,6 +981,7 @@ renders a modern UI via <strong>Flet</strong> (Flutter).</p>
 </tr>
 </tbody>
 </table>
+<p>See the <a href="roadmap/">Roadmap</a> for the full implementation plan.</p>
 <hr />
 <h2 id="quick-links">Quick links<a class="headerlink" href="#quick-links" title="Permanent link">&para;</a></h2>
 <ul>
@@ -787,7 +991,7 @@ renders a modern UI via <strong>Flet</strong> (Flutter).</p>
 <li><a href="plugins/">Plugins</a> — extend Kube-IDEA with Python plugins</li>
 <li><a href="security/">Security</a> — DevSecOps practices</li>
 <li><a href="contributing/">Contributing</a> — how to contribute</li>
-<li><a href="roadmap.md">Roadmap</a> — what is coming next</li>
+<li><a href="roadmap/">Roadmap</a> — what is coming next</li>
 </ul>
 
 
